@@ -5,7 +5,7 @@
  *
  * @author Vladislav Holovko <vlad.holovko@gmail.com>
  */
-class AfishaSaver extends CApplicationComponent{
+class Saver extends CApplicationComponent{
     
     public $db;
     public $connectionId = 'db';

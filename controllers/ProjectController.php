@@ -44,6 +44,7 @@ class ProjectController extends \yii\web\Controller
 
     public function actionIndex() {
         //$sql = "select * from GET_PROJECT_LIST";
+
         $sql = "select * from sites where social_type is null";
         $projects = Yii::$app->db->createCommand($sql)->queryAll();
         //print_r($projects);
@@ -128,7 +129,7 @@ class ProjectController extends \yii\web\Controller
         if (empty($model)) {
             throw new HttpException(404,'Проект не найден');
         }
-        $sql = "delete from projects p where p.id=:project_id";
+        $sql = "delete from sites p where p.site_id=:project_id";
         $params = [':project_id' => $id];
         try {
             Yii::$app->db->createCommand($sql, $params)->execute();
@@ -173,19 +174,29 @@ class ProjectController extends \yii\web\Controller
                             //echo $data;
                             //exit();
                             $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
-                            $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
+                            //$objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
                             //echo Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
-                            include Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
-                            ob_start();
-                            Yii::$app->session->close();
-                            $ret = eval($form->code);
-                            Yii::$app->session->open();
-                            $result = ob_get_clean();
-                            if (false === $ret) {
-                                Yii::$app->session->setFlash('error','Ошибка синтаксиса');
+                            $searchs = $loader->getSearchStrings();
+                            if (!empty($searchs)) {
+                                $data = [];
+                                include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
+                                ob_start();
+                                Yii::$app->session->close();
+                                $ret = eval($form->code);
+                                Yii::$app->session->open();
+                                $result = ob_get_clean();
+                                if (false === $ret) {
+                                    Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
+                                } else {
+                                    //сохраняем данные
+                                    if (!empty($data)) {
+                                        foreach ($data as $res) {
+                                            $this->saveResult($res['object_id'], $res['url']);
+                                        }
+                                    }
+                                    Yii::$app->session->setFlash('result', $result);
+                                }
                             }
-                            else
-                                Yii::$app->session->setFlash('result',$result);
                         }
                     } catch (ErrorException $exc) {
                         Yii::$app->session->setFlash('error',$exc->getTraceAsString());
@@ -218,5 +229,9 @@ class ProjectController extends \yii\web\Controller
         }
     }
 
-
+    private function saveResult($object_id, $url) {
+        $db = Yii::$app->db;
+        $params = [':object_id' => $object_id, ':url' => $url];
+        $db->createCommand('execute procedure PUT_URL(:object_id, :url)', $params)->execute();
+    }
 }

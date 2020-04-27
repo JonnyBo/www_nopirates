@@ -130,6 +130,7 @@ $search = 'Рожденный после смерти';//'ван гоги';
         'q' => $search,
        // 'longer' => 4200 //5280
     ];
+/*    
 require_once dirname(__FILE__).'/vendor/autoload.php';
 
 use \VK\Client\VKApiClient;
@@ -137,8 +138,11 @@ use \VK\OAuth\VKOAuth;
 use \VK\OAuth\VKOAuthDisplay;
 use \VK\OAuth\Scopes\VKOAuthUserScope;
 use \VK\OAuth\VKOAuthResponseType;
+*/
 
-$oauth = new VKOAuth('5.103');
+session_start();
+
+//$oauth = new VKOAuth('5.103');
 $client_id = 6983714;
 $redirect_uri = 'http://nopirates/vk.php'; 
 $display = VKOAuthDisplay::POPUP;
@@ -148,12 +152,44 @@ $code = 'CODE';
 
 //$browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
 
-$response = $oauth->getAccessToken($client_id, $state, $redirect_uri, $code);
-$access_token = $response['access_token'];
-
-//$access_token = '3399f74e3399f74e3399f74efd33f3676c333993399f74e6f434a7d2423cb1fcd058ff8';
+//$response = $oauth->getAccessToken($client_id, $state, $redirect_uri, $code);
+//print_r($response);
+//$access_token = $response['access_token'];
+/*
+$access_token = '29295190688c535ebeb45c68b1e29b5fa8b57940b969cef7608f371f54a1e394292fd68d669c121d757b2';
 
 $vk = new VK\Client\VKApiClient();
 $videos = $vk->video()->search($access_token, $params);
 print_r($videos);
+*/
+
+
+
+//$client_id = '1234567';
+//$redirect_uri = 'http://localhost';
+$display = 'page';
+$scope = 'wall,groups,video';
+$response_type = 'code';
+$auth_uri = "https://oauth.vk.com/authorize?client_id={$client_id}&display={$display}&
+redirect_uri={$redirect_uri}&scope={$scope}&response_type={$response_type}&v=5.52";
+header('Location: ' . $auth_uri);
+if(isset($_GET['code'])){
+    $code = $_GET['code'];
+    $acces_uri = "https://oauth.vk.com/access_token";
+    $fields = array(
+        'client_id' => $client_id,
+        'client_secret' => $state,
+        'redirect_uri' => $redirect_uri,
+        'code' => $code
+    );
+    $acces_uri .= "?client_id={$fields['client_id']}&";
+    $acces_uri .= "client_secret={$fields['client_secret']}&";
+    $acces_uri .= "redirect_uri={$fields['redirect_uri']}&";
+    $acces_uri .= "code={$fields['code']}";
+    $res = file_get_contents($acces_uri);
+    $response_string = json_decode($res,true);
+    $_SESSION['token'] = $response_string['access_token'];
+}
+print_r($_SESSION);
+
 ?>

@@ -187,29 +187,34 @@ class SocialsController extends \yii\web\Controller
                     Yii::$app->session->setFlash('error','Ошибка авторизации');
                 }
 */
-
+                $session = Yii::$app->session;
                 $oauth = new VKOAuth('5.101');
                 $client_id = $form->client_id;
                 $redirect_uri = $form->redirect_uri;
+                //$redirect_uri = 'http://nopirates/vk.php';
                 $display = VKOAuthDisplay::POPUP;
                 $scope = array(VKOAuthUserScope::VIDEO);
                 $state = $form->client_secret;
                 $code = 'CODE';
-                $access_token = false;
-                $_GET['code'] = 'a4101b2251abc6085d';
-                if ($_GET['code']) {
-                    $code = $_GET['code'];
-                    $response = $oauth->getAccessToken($form->client_id, $form->client_secret, $form->redirect_uri, $code);
-                    $access_token = $response['access_token'];
-                } else {
-                    $browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
 
-                    //header('Location:'.$browser_url);
+                if (isset($session['token']) && $session['token']) {
+                    $vk = new \VK\Client\VKApiClient();
+                    $access_token = $session['token'];
+                } else {
+                    if ($_GET['code']) {
+                        $code = $_GET['code'];
+                        $response = $oauth->getAccessToken($form->client_id, $form->client_secret, $form->redirect_uri, $code);
+                        $session['token'] = $response['access_token'];
+                    } else {
+                        $browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
+                        header('Location:' . $browser_url);
+                    }
                 }
                 //$access_token = $form->access_token;
-
-                if ($access_token) {
-                    $vk = new VKApiClient();
+                //echo $access_token;
+                //$access_token = 'b650621ee7202556f5b354e1268487fdde6ecaca00b896d67fbbc0f059a9d9c8eb730ae11137af493668f';
+                if (isset($session['token']) && $session['token']) {
+                    $vk = new \VK\Client\VKApiClient();
                 } else {
                     Yii::$app->session->setFlash('error', 'Ошибка авторизации');
                     exit();
@@ -223,30 +228,38 @@ class SocialsController extends \yii\web\Controller
                 $Client = new Client();
                 $Client->setApplicationKey($form->application_key)->setToken($Token)->setClientId($form->client_id)->setClientSecret($form->client_secret)->setRedirectUri($form->redirect_uri);
             }
+            $loader = Yii::$app->siteLoader;
             try {
                 if ($form->code) {
                     $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
                     $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                    //print_r($objects);
-                    //exit();
-                    ob_start();
-                    Yii::$app->session->close();
-                    $ret = eval($form->code);
-                    Yii::$app->session->open();
-                    $result = ob_get_clean();
-                    //$result = json_decode($result);
-                    if (false === $ret) {
-                        Yii::$app->session->setFlash('error','Ошибка синтаксиса');
-                    } else {
-                        if (!empty($out)) {
-                            foreach ($out as $res) {
-                                if ($form->social_type == 'ok')
-                                    $this->saveResult($res->object_id, $res->permalink);
-                                else
-                                    $this->saveResult($res['object_id'], $res['player']);
+                    $searchs = $loader->getSearchStrings($objects);
+                    if (!empty($searchs)) {
+                        $data = [];
+
+                        //$objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
+                        //print_r($objects);
+                        //exit();
+                        ob_start();
+                        Yii::$app->session->close();
+                        $ret = eval($form->code);
+                        Yii::$app->session->open();
+                        $result = ob_get_clean();
+                        //$result = json_decode($result);
+                        if (false === $ret) {
+                            Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
+                        } else {
+                            if (!empty($data)) {
+                                foreach ($data as $res) {
+                                    if ($form->social_type == 'ok') {
+                                        $this->saveResult($res->object_id, $res->permalink, $res->title);
+                                    } else {
+                                        $this->saveResult($res['object_id'], $res['player'], $res['title']);
+                                    }
+                                }
                             }
+                            Yii::$app->session->setFlash('result', $result);
                         }
-                        Yii::$app->session->setFlash('result', $result);
                     }
                 }
             } catch (ErrorException $exc) {
@@ -276,9 +289,25 @@ class SocialsController extends \yii\web\Controller
 
     }
 
-    private function saveResult($object_id, $url) {
-        $db = Yii::$app->db;
-        $params = [':object_id' => $object_id, ':url' => $url];
-        $db->createCommand('execute procedure PUT_URL(:object_id, :url)', $params)->execute();
+    private function getObject($objects, $object_id) {
+        foreach($objects as $obj) {
+            if ($obj->object_id == $object_id) {
+                return $obj;
+                break;
+            }
+        }
+    }
+
+    private function saveResult($object_id, $url, $title) {
+        if ($object_id && $url) {
+            $db = Yii::$app->db;
+            $params = [':object_id' => $object_id, ':url' => $url, ':title' => $title];
+            //print_r($params);
+            $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
+        }
+    }
+
+    private function clearVKLink($link) {
+
     }
 }

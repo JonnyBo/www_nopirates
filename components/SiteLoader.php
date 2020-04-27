@@ -1,6 +1,7 @@
 <?php
 namespace app\components;
 
+use app\models\Objects;
 use Yii;
 use yii\base\Component;
 use linslin\yii2\curl;
@@ -305,6 +306,45 @@ class SiteLoader extends Component
         }
         return $this->_curl->getStatus();
     }
-    
+
+    public function sendCurl($url, $headers, $cookie, $post_data) {
+        $curl = curl_init();
+        //$headers = array('Referer: https://kinokrad.co/index.php','Origin: https://kinokrad.co','Content-Type: application/x-www-form-urlencoded');
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($curl ,CURLOPT_HTTPHEADER,$headers);
+        if ($post_data) {
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+        }
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+        curl_setopt($curl, CURLOPT_COOKIEJAR, Yii::$app->basePath . '/web/cookies/' . $cookie);
+        curl_setopt($curl, CURLOPT_COOKIEFILE, Yii::$app->basePath . '/web/cookies/' . $cookie);
+        $out = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        curl_close($curl);
+        return $out;
+    }
+
+    public function getSearchStrings($objects) {
+        $tituls = [];
+        if (!empty($objects)) {
+            foreach ($objects as $object) {
+                if ($object->original_title)
+                    $tituls[$object->object_id][] = '"' . $object->original_title . '"';
+                $tituls[$object->object_id][] = '"' . $object->title . '"';
+                if ($object->year_prod)
+                    $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->year_prod . '"';
+                if ($object->director)
+                    $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->director . '"';
+            }
+        }
+        return $tituls;
+    }
     
 }

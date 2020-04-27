@@ -62,6 +62,8 @@ use \VK\OAuth\VKOAuthDisplay;
 use \VK\OAuth\Scopes\VKOAuthUserScope;
 use \VK\OAuth\VKOAuthResponseType;
 
+session_start();
+
 $oauth = new VKOAuth('5.101');
 $client_id = '6983714';
 $redirect_uri = 'http://nopirates/vk.php'; 
@@ -71,32 +73,36 @@ $scope = array(VKOAuthUserScope::VIDEO);
 $state = '24qKeZpx3jcg70A5VCQh';
 $code = 'CODE';
 //'offline,notify,friends,photos,audio,video,wall'
-if (!isset($_GET['code'])) {
-    if ($browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
-    header('Location:'.$browser_url);) {
-	
+if (isset($_SESSION['token'])) {
+    $vk = new \VK\Client\VKApiClient();
+    $videos = $vk->video()->search($_SESSION['token'], $params);
+    print_r($videos);
 } else {
-    $code = $_GET['code'];
-    try {
-        $response = $oauth->getAccessToken($client_id, $state, $redirect_uri, $code);
-    } catch (VKClientException $e) {
-        die($e->getMessage());
-    } catch (VKOAuthException $e) {
-        die($e->getMessage());
+    if (!isset($_GET['code'])) {
+        if ($browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state))
+            header('Location:'.$browser_url);
+    	
+    } else {
+        $code = $_GET['code'];
+        try {
+            $response = $oauth->getAccessToken($client_id, $state, $redirect_uri, $code);
+        } catch (VKClientException $e) {
+            die($e->getMessage());
+        } catch (VKOAuthException $e) {
+            die($e->getMessage());
+        }
+        $access_token = $response['access_token'];
+        $_SESSION['token'] = $access_token;
+        echo $access_token;
     }
-    $access_token = $response['access_token'];
 }
-
+//$access_token = 'b650621ee7202556f5b354e1268487fdde6ecaca00b896d67fbbc0f059a9d9c8eb730ae11137af493668f';
 //$browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
 
 //$response = $oauth->getAccessToken($client_id, $state, $redirect_uri, $code);
 //$access_token = $response['access_token'];
 
-//$access_token = '3399f74e3399f74e3399f74efd33f3676c333993399f74e6f434a7d2423cb1fcd058ff8';
-
-$vk = new \VK\Client\VKApiClient();
-$videos = $vk->video()->search($access_token, $params);
-print_r($videos);
+//$access_token = '760ca5f4927991d2569994f572c8fc23c58303040b9ba6c542180d9ed0eaf03fe295aefe62016878636f5';
 
 
 ?>
