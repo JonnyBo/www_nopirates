@@ -37,11 +37,21 @@ $config = [
                 'password' => 'ILfTXTCY3qscS29B',
                 'port' => 587,
                 'encryption' => 'tls',
+                'streamOptions' => [
+                    'ssl' => [
+                        'allow_self_signed' => true,
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ],
             ],
             'useFileTransport' => false,
         ],
         'siteLoader' =>[
             'class'=>'app\components\SiteLoader'
+        ],
+        'saver' =>[
+            'class'=>'app\components\Saver'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -49,6 +59,7 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'except' => ['yii\db\*', 'yii\web\*', 'yii\base\*'],
                 ],
             ],
         ],
@@ -76,14 +87,14 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '93.81.32.211'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '93.81.32.211'],
     ];
 }
 

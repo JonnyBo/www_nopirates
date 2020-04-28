@@ -1,11 +1,15 @@
 <?php
+namespace app\components;
+
+use Yii;
+use yii\base\Component;
 
 /**
  * Description of AfishaSaver
  *
  * @author Vladislav Holovko <vlad.holovko@gmail.com>
  */
-class Saver extends CApplicationComponent{
+class Saver extends Component {
     
     public $db;
     public $connectionId = 'db';
@@ -17,7 +21,7 @@ class Saver extends CApplicationComponent{
     
     public function init() {
         parent::init();
-        if (null === $this->db = Yii::app()->getComponent($this->connectionId)) {
+        if (null === Yii::$app->db) {
             throw new CException("Can't load database component");
         }
 		$this->i = 0;
@@ -51,13 +55,16 @@ class Saver extends CApplicationComponent{
             }
 
         }
-
+        $result->setFrom(['legal@antipirates.ru']);
         $result->setTo([$email]);
         $result->setSubject('Сообщение от правообладателя');
         $result->send();
 
         if (!$result) {
+            Yii::$app->session->setFlash('error','Sending error.');
             throw new \RuntimeException('Sending error.');
+        } else {
+            Yii::$app->session->setFlash('result', $result);
         }
     }
 }

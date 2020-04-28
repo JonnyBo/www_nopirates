@@ -14,6 +14,7 @@ use yii\helpers\Html;
 use yii\base\ErrorException;
 use yii\web\HttpException;
 use yii\helpers\Json;
+use yii\components\Saver;
 use \VK\Client\VKApiClient;
 use \VK\OAuth\VKOAuth;
 use \VK\OAuth\VKOAuthDisplay;
@@ -297,7 +298,7 @@ class SocialsController extends \yii\web\Controller
     }
 
     public function actionSend() {
-        $saver = new \Saver();
+        $saver = Yii::$app->saver;
         $files = [
             'http://dev.myls/files/6c85c53c1512c255453a10e40ded80ee_Квитанция за платеж в ПФР (сверх дохода 1%).pdf',
             'http://dev.myls/files/8b88b5db7b9c2098fc9bacf364329ae3_Квитанция для уплаты налога для Сбербанка.pdf',
