@@ -29,10 +29,16 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'viewPath' => '@app/mail',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'antipirates.ru',
+                'username' => 'legal@antipirates.ru',
+                'password' => 'ILfTXTCY3qscS29B',
+                'port' => 587,
+                'encryption' => 'tls',
+            ],
+            'useFileTransport' => false,
         ],
         'siteLoader' =>[
             'class'=>'app\components\SiteLoader'

@@ -222,11 +222,17 @@ class SocialsController extends \yii\web\Controller
 
             }
             if ($form->social_type == 'ok') {
-                $Token = new Token();
-                $Token->setAccessToken($form->access_token)->setTokenType(Token::TYPE_SESSION);
+                try {
+                    $Token = new Token();
+                    $Token->setAccessToken($form->access_token)->setTokenType(Token::TYPE_SESSION);
 
-                $Client = new Client();
-                $Client->setApplicationKey($form->application_key)->setToken($Token)->setClientId($form->client_id)->setClientSecret($form->client_secret)->setRedirectUri($form->redirect_uri);
+                    $Client = new Client();
+                    $Client->setApplicationKey($form->application_key)->setToken($Token)->setClientId($form->client_id)->setClientSecret($form->client_secret)->setRedirectUri($form->redirect_uri);
+                } catch(ErrorException $ex) {
+                    //Yii::$app->db->rollback();
+                    Yii::$app->session->setFlash('error',$ex->getMessage());
+                    throw new HttpException(400,$ex->getMessage());
+                }
             }
             $loader = Yii::$app->siteLoader;
             try {
@@ -254,7 +260,8 @@ class SocialsController extends \yii\web\Controller
                                     if ($form->social_type == 'ok') {
                                         $this->saveResult($res->object_id, $res->permalink, $res->title);
                                     } else {
-                                        $this->saveResult($res['object_id'], $res['player'], $res['title']);
+                                        $url = $this->clearVKLink($res['player']);
+                                        $this->saveResult($res['object_id'], $url, $res['title']);
                                     }
                                 }
                             }
@@ -289,6 +296,21 @@ class SocialsController extends \yii\web\Controller
 
     }
 
+    public function actionSend() {
+        $saver = new \Saver();
+        $files = [
+            'http://dev.myls/files/6c85c53c1512c255453a10e40ded80ee_Квитанция за платеж в ПФР (сверх дохода 1%).pdf',
+            'http://dev.myls/files/8b88b5db7b9c2098fc9bacf364329ae3_Квитанция для уплаты налога для Сбербанка.pdf',
+            'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
+        ];
+        $email = 'evgen-borisov@yandex.ru';
+        $info = [
+            'name' => 'Евгений',
+            'message' => 'Тестовое сообщение.'
+        ];
+        $saver->sentEmail($email, $info, $tpl = false, $files = []);
+    }
+
     private function getObject($objects, $object_id) {
         foreach($objects as $obj) {
             if ($obj->object_id == $object_id) {
@@ -308,6 +330,17 @@ class SocialsController extends \yii\web\Controller
     }
 
     private function clearVKLink($link) {
-
+        //$link = str_replace("&amp;", "&", $link);
+        list($url_part, $qs_part) = array_pad(explode("?", $link), 2, "");
+        parse_str($qs_part, $qs_vars);
+        unset($qs_vars['__ref']);
+        unset($qs_vars['api_hash']);
+        if (count($qs_vars) > 0) {
+            $url = $url_part."?".http_build_query($qs_vars); // Собираем URL обратно
+            //$url = str_replace("&", "&amp;", $url);
+        } else {
+            $url = $url_part;
+        }
+        return $url;
     }
 }
