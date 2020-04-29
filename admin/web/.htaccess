@@ -1,0 +1,16 @@
+Options All -Indexes
+#Options +FollowSymLinks
+IndexIgnore */*
+
+#DirectoryIndex web/index.php
+
+RewriteEngine on
+
+#RewriteRule /admin/ /admin/index [R=301,L]
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php

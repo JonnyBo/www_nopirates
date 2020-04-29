@@ -1,11 +1,15 @@
-Options +FollowSymLinks
+Options All -Indexes
+#Options +FollowSymLinks
 IndexIgnore */*
+
 
 RewriteEngine on
 
 # if a directory or a file exists, use it directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteCond %{REQUEST_URI} !^/admin
 
 # otherwise forward it to index.php
 RewriteRule . index.php

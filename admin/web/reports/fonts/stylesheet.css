@@ -1,0 +1,26 @@
+/*@font-face {
+    font-family: 'Shentox';
+    src: url('Shentox.eot');
+    font-weight: normal;
+    font-style: normal;
+}*/
+@font-face {
+    font-family: 'Shentox';
+    src:  url('Shentox.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*@font-face {
+    font-family: 'Shentox';
+    src: url('Shentox-SemiBold.eot');
+    font-weight: 600;
+    font-style: normal;
+}*/
+@font-face {
+    font-family: 'ShenSBld';
+    src: url('ShenSBld.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
