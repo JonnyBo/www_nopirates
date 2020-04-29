@@ -300,16 +300,16 @@ class SocialsController extends \yii\web\Controller
     public function actionSend() {
         $saver = Yii::$app->saver;
         $files = [
-            'http://dev.myls/files/6c85c53c1512c255453a10e40ded80ee_Квитанция за платеж в ПФР (сверх дохода 1%).pdf',
-            'http://dev.myls/files/8b88b5db7b9c2098fc9bacf364329ae3_Квитанция для уплаты налога для Сбербанка.pdf',
-            'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
+            'http://oasis-light.ru/files/klassicheskiy.pdf',
+            //'http://myls.education/files/034cb5f61282145049fcae456e3c4e6b_Diploma Margarita Korolchenko B1.pdf',
+            //'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
         ];
         $email = 'evgen-borisov@yandex.ru';
         $info = [
             'name' => 'Евгений',
             'message' => 'Тестовое сообщение.'
         ];
-        $saver->sentEmail($email, $info, $tpl = false, $files = []);
+        $saver->sentEmail($email, $info, $tpl = false, $files);
     }
 
     private function getObject($objects, $object_id) {

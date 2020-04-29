@@ -44,14 +44,15 @@ class Saver extends Component {
         ], $info);
 
         if (!empty($files)) {
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            //$finfo = finfo_open(FILEINFO_MIME_TYPE);
             foreach ($files as $file) {
                 $path_info = pathinfo($file);
                 $content_file = file_get_contents($file);
-                $type =  $finfo->buffer($content_file);
+                //$type =  $finfo->buffer($content_file);
                 $result->attachContent($content_file, [
                     'fileName' => $path_info['basename'],
-                    'contentType' => $type]);
+                    //'contentType' => $type
+                ]);
             }
 
         }
