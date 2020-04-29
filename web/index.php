@@ -5,6 +5,7 @@ defined('YII_DEBUG') or define('YII_DEBUG', false);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
 require __DIR__ . '/../../yii2-basic/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 require __DIR__ . '/../../yii2-basic/vendor/yiisoft/yii2/Yii.php';
 
 $config = require __DIR__ . '/../config/web.php';

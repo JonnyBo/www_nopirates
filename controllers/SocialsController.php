@@ -22,7 +22,7 @@ use \VK\OAuth\Scopes\VKOAuthUserScope;
 use \VK\OAuth\VKOAuthResponseType;
 
 
-require_once dirname(__DIR__).'/vendor/autoload.php';
+//require_once dirname(__DIR__).'/vendor/autoload.php';
 use alxmsl\Odnoklassniki\OAuth2\Response\Token;
 use alxmsl\Odnoklassniki\API\Client;
 
