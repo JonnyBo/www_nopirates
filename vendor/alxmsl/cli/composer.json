@@ -1,0 +1,22 @@
+{
+    "name": "alxmsl/cli",
+    "description": "Simple library for php-cli script options support",
+    "keywords": ["posix", "cli", "command-line"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "alxmsl",
+            "email": "alexey.y.maslov@gmail.com"
+        }
+    ],
+    "support": {
+        "email": "alexey.y.maslov@gmail.com",
+        "issues": "https://github.com/alxmsl/Cli/issues"
+    },
+    "autoload": {
+        "psr-4": {"alxmsl\\Cli\\": "source/"}
+    },
+    "require-dev":{
+        "phpunit/phpunit": "4.7.*"
+    }
+}

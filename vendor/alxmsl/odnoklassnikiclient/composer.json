@@ -1,0 +1,26 @@
+{
+    "name": "alxmsl/odnoklassnikiclient",
+    "description": "Simple client for Odnoklassniki API",
+    "keywords": ["odnoklassniki", "ok", "odnoklassniki-api", "ok-api"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "alxmsl",
+            "email": "alexey.y.maslov@gmail.com"
+        }
+    ],
+    "support": {
+        "email": "alexey.y.maslov@gmail.com",
+        "issues": "https://github.com/alxmsl/OdnoklassnikiClient/issues"
+    },
+    "autoload": {
+        "psr-4": {"alxmsl\\Odnoklassniki\\": "source/"}
+    },
+    "require": {
+        "alxmsl/network": ">=1.1.0",
+        "alxmsl/cli": ">=1.0.2"
+    },
+    "require-dev":{
+        "phpunit/phpunit": "4.7.*"
+    }
+}

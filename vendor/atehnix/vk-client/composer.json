@@ -1,0 +1,22 @@
+{
+    "name": "atehnix/vk-client",
+    "description": "PHP client for Vk.com API",
+    "keywords": ["php", "api", "client", "vk", "vk.com", "vkontakte"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "ATehnix",
+            "email": "atehnix@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ATehnix\\VkClient\\": "src"
+        }
+    }
+
+}
