@@ -87,7 +87,7 @@ class MylsObject {
 				const store = self.dataSource.store();
 				app.openLoadPanel(self.idn);
 				$.ajax({
-					url: '/frame/tablerow',
+					url: 'frame/tablerow',
 					type: 'get',
 					data: {'id': self.table, 'extId': ext_id},
 					success: function (data) {
@@ -182,7 +182,7 @@ class MylsObject {
 
 	async processDelete(key) {
 		try {
-			let data = await app.processData("/frame/delete?table=" + this.table + "&extId=" + key + "&lang=" + app.config.lang, "DELETE");
+			let data = await app.processData("frame/delete?table=" + this.table + "&extId=" + key + "&lang=" + app.config.lang, "DELETE");
 			this.processResult(data);
 		} catch (e) {
 			this.processResult(e);
@@ -227,7 +227,7 @@ class MylsObject {
 					let params = self.prepareTableData();
 					params.filter = JSON.stringify(ds.mylsFilter);
 					app.openLoadPanel(self.idn);
-					let result = await app.processData('/frame/tabledata', 'POST', params);
+					let result = await app.processData('frame/tabledata', 'POST', params);
 					app.closeLoadPanel(self.idn);
 					self.changed();
 					return result;
@@ -480,7 +480,7 @@ class MylsObject {
 			if (column.editor && column.editor.NAME !== 'dxButtonGroup')
 				column.editor.getDataSource().store().clearRawDataCache();
 			column.dataParams = jpParams;
-			return app.processData('/form/getlookup', 'post', params);
+			return app.processData('form/getlookup', 'post', params);
 		}
 	}
 

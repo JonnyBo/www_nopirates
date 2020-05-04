@@ -165,7 +165,7 @@ function initDragList(table, ext_id, view, mode, tHistory) {
 				params.lang = config.lang;
 				params.company_id = config.company_id;
 				postParams.params = JSON.stringify(params);
-				var updateData = getData('/frame/updateproc', 'post', postParams);
+				var updateData = getData('frame/updateproc', 'post', postParams);
 				$.when(updateData).done(function (msg) {
 					if (msg.success && !msg.success.error_msg)
 						deferred.resolve(e);

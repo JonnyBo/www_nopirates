@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="mylsTitle"  style="color: <?=Yii::$app->params['logoColor'];?>"><?=Yii::$app->params['projectName'];?></div>
     </div>
-    <form action="site/login" id="form-container" method="post">
+    <form action="" id="form-container" method="post">
         <div id="mylsAuthForm"></div>
     </form>
 </div>

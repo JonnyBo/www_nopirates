@@ -32,7 +32,7 @@ class App extends AppCore {
 		this.menu.init();
 		this.toolbar.init();
 		this.topTabs.init();
-		this.quickActions = await this.processData('/menu/getquickactions', 'get');
+		this.quickActions = await this.processData('menu/getquickactions', 'get');
 		this.initQuickActions();
 		this.initDialog();
 		this.createTooltip();
@@ -157,7 +157,7 @@ class App extends AppCore {
 
 	async getAllTablesInfo() {
 		if (!this.appInfo.tables) {
-			let tableInfo = await this.processData('/frame/getalltablesinfo', 'get');
+			let tableInfo = await this.processData('frame/getalltablesinfo', 'get');
 			this.appInfo.tables = tableInfo;
 			//добавляем названия в файл переводов для текущей локали
 			this.translate.saveTranslateTableInfo(tableInfo);
@@ -166,7 +166,7 @@ class App extends AppCore {
 
 	async getAllTemplates() {
 		if (!this.appInfo.templates) {
-			let templates = await this.processData('/frame/getalltemplates', 'get');
+			let templates = await this.processData('frame/getalltemplates', 'get');
 			this.appInfo.templates = templates;
 			//добавляем названия в файл переводов для текущей локали
 			this.translate.saveTranslateTableInfo(templates);
@@ -175,7 +175,7 @@ class App extends AppCore {
 
 	async getAllContextMenu() {
 		if (!this.appInfo.contextMenu) {
-			let menus = await this.processData('/menu/getallcontextmenu', 'get');
+			let menus = await this.processData('menu/getallcontextmenu', 'get');
 			//добавляем названия в файл переводов для текущей локали
 			this.translate.saveTranslateContextMenu(menus);
 			this.appInfo.contextMenu = menus;
@@ -184,7 +184,7 @@ class App extends AppCore {
 
 	async getAllColumns() {
 		if (!this.appInfo.columns) {
-			let columns = await this.processData('/frame/getallcols', 'get');
+			let columns = await this.processData('frame/getallcols', 'get');
 			this.appInfo.columns = columns;
 			//добавляем названия в файл переводов для текущей локали
 			this.translate.saveTranslateColumns(columns);
@@ -193,7 +193,7 @@ class App extends AppCore {
 
 	async getQuickActions() {
 		if (!this.appInfo.quickActions) {
-			let quickActions = await this.processData('/menu/getquickactions', 'get');
+			let quickActions = await this.processData('menu/getquickactions', 'get');
 			//this.translate.saveTranslateContextMenu(quickActions);
 			this.appInfo.quickActions = quickActions;
 		}
@@ -201,7 +201,7 @@ class App extends AppCore {
 
 	async getMenu() {
 		if (!this.appInfo.menu) {
-			let menu = await this.processData('/menu/getmenu', 'get');
+			let menu = await this.processData('menu/getmenu', 'get');
 			this.translate.saveTranslateMenu(menu);
 			this.appInfo.menu = menu;
 		}

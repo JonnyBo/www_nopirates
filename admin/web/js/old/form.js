@@ -1095,10 +1095,10 @@ function initForm(table, ext_id, view, mode, tHistory, params, template) {
 			var update;
 			if (tableInfo.hasOwnProperty(updParams) && tableInfo[updParams].length) {
 				params.params = JSON.stringify(updateArr);
-				update = setData('/frame/updateproc', 'post', params);
+				update = setData('frame/updateproc', 'post', params);
 			} else {
 				params.data = JSON.stringify(updateArr);
-				update = setData('/frame/update', 'post', params);
+				update = setData('frame/update', 'post', params);
 			}
 
 			//var update = setData('/form/update', 'post', params);

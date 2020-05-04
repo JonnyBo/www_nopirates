@@ -67,7 +67,7 @@ function getTemplate(tableId) {
 function getAllTablesInfo() {
 	var deferred = $.Deferred();
 	if (!Object.keys(appInfo.tables).length) {
-		var tableInfo = getData('/frame/getalltablesinfo', 'get', {});
+		var tableInfo = getData('frame/getalltablesinfo', 'get', {});
 		$.when(tableInfo).done(function (data) {
 			appInfo.tables = data;
 			//добавляем названия в файл переводов для текущей локали
@@ -81,7 +81,7 @@ function getAllTablesInfo() {
 function getAllTemplates() {
 	var deferred = $.Deferred();
 	if (!Object.keys(appInfo.templates).length) {
-		var templates = getData('/frame/getalltemplates', 'get', {});
+		var templates = getData('frame/getalltemplates', 'get', {});
 		$.when(templates).done(function (data) {
 			appInfo.templates = data;
 			//добавляем названия в файл переводов для текущей локали
@@ -110,7 +110,7 @@ function getAllContextMenu() {
 function getAllColumns() {
 	var deferred = $.Deferred();
 	if (!Object.keys(appInfo.columns).length) {
-		var columns = getData('/frame/getallcols', 'get', {});
+		var columns = getData('frame/getallcols', 'get', {});
 		$.when(columns).done(function (data) {
 			appInfo.columns = data;
 			//console.log(appInfo);

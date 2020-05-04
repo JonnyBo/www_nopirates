@@ -50,7 +50,7 @@ class MylsEditableObject extends MylsObject {
         updParams.id = column.id;
         updParams.params = JSON.stringify(updValues);
         try {
-            await app.processData('/frame/updatelookup', 'post', updParams);
+            await app.processData('frame/updatelookup', 'post', updParams);
         } catch (error) {
             await this.processResult(error);
         }
@@ -133,10 +133,10 @@ class MylsEditableObject extends MylsObject {
 
         if (this.tableInfo.hasOwnProperty(updParams) && this.tableInfo[updParams].length) {
             params.params = JSON.stringify(updateArr);
-            return app.processData('/frame/updateproc', 'post', params);
+            return app.processData('frame/updateproc', 'post', params);
         } else {
             params.data = JSON.stringify(updateArr);
-            return app.processData('/frame/update', 'post', params);
+            return app.processData('frame/update', 'post', params);
         }
     }
 
@@ -202,11 +202,11 @@ class MylsEditableObject extends MylsObject {
     }
 
     execCloseProc(data) {
-        return this.execDataProcedure('closeProc','/form/closeproc' ,data);
+        return this.execDataProcedure('closeProc','form/closeproc' ,data);
     }
 
 	execCancelProc(data) {
-        return this.execDataProcedure('cancelProc','/form/cancelproc' ,data);
+        return this.execDataProcedure('cancelProc','form/cancelproc' ,data);
     }
 
     execDataProcedure(procedureName, url, data) {
@@ -252,7 +252,7 @@ class MylsEditableObject extends MylsObject {
 
             const postParams = this.getPostParams(data, self.tableInfo.checkProc);
             try {
-                let msg = await app.processData('/frame/checkdata', 'post', postParams);
+                let msg = await app.processData('frame/checkdata', 'post', postParams);
                 if (msg.success && !msg.success[0].error_msg) {
                     resolve();
                     return;

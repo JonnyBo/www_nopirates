@@ -206,7 +206,7 @@ class DragList extends MylsObject {
 			try {
 				let params = this.setUpdateParams(item, e.toData[self.groupColumn.dataField]);
 				postParams.params = JSON.stringify(params);
-				let result = await app.processData('/frame/updateproc', 'post', postParams);
+				let result = await app.processData('frame/updateproc', 'post', postParams);
 				this.processResult(result);
 				this.progressBar.step();
 			} catch (error) {

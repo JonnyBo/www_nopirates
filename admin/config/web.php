@@ -127,7 +127,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'baseUrl' => '/admin',
+            //'baseUrl' => '/admin',
             'rules' => [
 
             ],

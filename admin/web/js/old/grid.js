@@ -277,7 +277,7 @@ function initTable(table, ext_id, view, mode, tHistory, viewMode) {
 					params.ext_id = e.row.data['id'];
 					params.type = 'upd';
 					params.data = JSON.stringify(data);
-					setData('/frame/update', 'post', params);
+					setData('frame/update', 'post', params);
 					var focusedRow = e.rowIndex;
 					//grid.repaintRows([e.rowIndex]);
 					grid.option('focusedRowIndex', focusedRow);

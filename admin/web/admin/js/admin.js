@@ -7,7 +7,7 @@ function initData(table, ext_id, objectType) {
     //получаем данные таблицы
     //var tableData = getData('/' + objectType + '/tabledata', 'get', {'id': table, 'extId': ext_id});
     //получаем контекстное меню таблицы
-    //var contextMenuData = getData('/menu/getcontextmenu', 'get', {'id': table});
+    //var contextMenuData = getData('menu/getcontextmenu', 'get', {'id': table});
     //добавляем названия в файл переводов для текущей локали
     //saveTranslateContextMenu(contextMenuData);
     //получаем данные для тулбара
@@ -76,7 +76,7 @@ function setTemplate(tableId, template) {
 function getAllTablesInfo() {
     var deferred = $.Deferred();
     if (!Object.keys(appInfo.tables).length) {
-        var tableInfo = getData('/frame/getalltablesinfo', 'get', {});
+        var tableInfo = getData('frame/getalltablesinfo', 'get', {});
         $.when(tableInfo).done(function (data) {
             appInfo.tables = data;
             //добавляем названия в файл переводов для текущей локали
@@ -90,7 +90,7 @@ function getAllTablesInfo() {
 function getAllTemplates() {
     var deferred = $.Deferred();
     if (!Object.keys(appInfo.templates).length) {
-        var templates = getData('/frame/getalltemplates', 'get', {});
+        var templates = getData('frame/getalltemplates', 'get', {});
         $.when(templates).done(function (data) {
             appInfo.templates = data;
             //добавляем названия в файл переводов для текущей локали
@@ -104,7 +104,7 @@ function getAllTemplates() {
 function getAllContextMenu() {
     var deferred = $.Deferred();
     if (!Object.keys(appInfo.contextMenu).length) {
-        var menus = getData('/menu/getallcontextmenu', 'get', {});
+        var menus = getData('menu/getallcontextmenu', 'get', {});
         $.when(menus).done(function (data) {
             //добавляем названия в файл переводов для текущей локали
             saveTranslateContextMenu(data);
@@ -119,7 +119,7 @@ function getAllContextMenu() {
 function getAllColumns() {
     var deferred = $.Deferred();
     if (!Object.keys(appInfo.columns).length) {
-        var columns = getData('/frame/getallcols', 'get', {});
+        var columns = getData('frame/getallcols', 'get', {});
         $.when(columns).done(function (data) {
             appInfo.columns = data;
             //console.log(appInfo);
@@ -999,11 +999,11 @@ $(function () {
     var siteTranslate = getData("/site/loadtranslate", "json");
     var settings = getSettings();
 
-    //var menu = getData('/menu/getmenu', 'get');
+    //var menu = getData('menu/getmenu', 'get');
 
     var menu = getData('/admin/getallforms', 'get');
 
-    var quickActions = getData('/menu/getquickactions', 'get');
+    var quickActions = getData('menu/getquickactions', 'get');
     var tables = getAllTablesInfo();
     var columns = getAllColumns();
     var cmenu = getAllContextMenu();

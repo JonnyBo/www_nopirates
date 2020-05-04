@@ -164,7 +164,7 @@ class Grid extends MylsEditableObject {
 			params.ext_id = e.row.data['id'];
 			params.type = 'upd';
 			params.data = JSON.stringify(data);
-			app.processData('/frame/update', 'post', params);
+			app.processData('frame/update', 'post', params);
 			const focusedRow = e.rowIndex;
 			this.object.option('focusedRowIndex', focusedRow);
 		}
@@ -337,7 +337,7 @@ class Grid extends MylsEditableObject {
 				self.object.option("focusedRowEnabled", false);
 			}
 			if (self.mode == 'ins') {
-				let data = await app.processData('/frame/tabledata', 'post', self.prepareTableData(-1, 'ins'));
+				let data = await app.processData('frame/tabledata', 'post', self.prepareTableData(-1, 'ins'));
 				self.updatedExtId[data[0]['id']] = data['ext_id'];
 				self.updatedExtField[data[0]['id']] = data['ext_field'];
 				self.rawValues[data['ext_id']] = app.cloneObject(data[0]);

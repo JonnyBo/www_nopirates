@@ -574,7 +574,7 @@ class Toolbar {
 			$.ajax({
 				type: "POST",
 				cache: false,
-				url: "/frame/importfromfiles",
+				url: "frame/importfromfiles",
 				data: {files: self.filename, table_id: self.table},
 				success: function (data) {
 					let res = $.parseJSON(data);
@@ -600,7 +600,7 @@ class Toolbar {
 			multiple: false,
 			allowedFileExtensions: [".csv", ".xls", ".xlsx"],
 			uploadMode: "instantly",
-			uploadUrl: "/frame/uploadfile?field=" + this.mylsObject.idn + '_fileUploader',
+			uploadUrl: "frame/uploadfile?field=" + this.mylsObject.idn + '_fileUploader',
 			name: this.mylsObject.idn + '_fileUploader',
 			minFileSize: 10,
 			onUploaded: function (e) {
@@ -640,7 +640,7 @@ class Toolbar {
 				let state = this.mylsObject.state();
 				app.prepareStorage(state);
 				$.ajax({
-					url: "/frame/tablesetting",
+					url: "frame/tablesetting",
 					method: 'post',
 					data: {'table': this.table, 'state': JSON.stringify(state)},
 					success: function (data) {

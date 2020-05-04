@@ -79,7 +79,7 @@ class Pivot extends MylsObject {
                         return self.datas[tableId];
                     else
                     {
-                        let result = await app.processData('/frame/tabledata', 'post', self.prepareTableData());
+                        let result = await app.processData('frame/tabledata', 'post', self.prepareTableData());
                         self.datas[tableId] = result;
                         return result;
                     }

@@ -49,7 +49,7 @@ class Form extends MylsEditableObject {
 		return new Promise(async (resolve, reject) => {
 			try {
 				if (this.mode != 'setup') {
-					this.tData = app.processData('/form/tabledata', 'post', this.prepareTableData());
+					this.tData = app.processData('form/tabledata', 'post', this.prepareTableData());
 				} else this.tData = {'0': []};
 				this.tableData = await this.tData;
 				if (this.mode == 'ins') {
@@ -555,7 +555,7 @@ class Form extends MylsEditableObject {
 				multiple: false,
 				accept: fileType === 'image' ? 'image/*' : '*',
 				uploadMode: "instantly",
-				uploadUrl: "/form/uploadimage?field=" + idn,
+				uploadUrl: "form/uploadimage?field=" + idn,
 				name: idn,
 				showFileList: false,
 				onUploaded: fileUploaded,
@@ -717,7 +717,7 @@ class Form extends MylsEditableObject {
 			params['ext_id'] = this.tableData[column.extField];
 
 		app.addConfigParams(params);
-		return app.processData('/form/getlookupvalues', 'get', {'id': column.id, 'params': JSON.stringify(params)});
+		return app.processData('form/getlookupvalues', 'get', {'id': column.id, 'params': JSON.stringify(params)});
 	}
 
 	initializeEditor(e, column) {
@@ -892,7 +892,7 @@ class Form extends MylsEditableObject {
 				else
 					params.values = JSON.stringify(item.editor.option('value'));
 
-				result.push(app.processData('/form/updatetagbox', 'post', params));
+				result.push(app.processData('form/updatetagbox', 'post', params));
 			}
 		});
 		return result;
@@ -931,7 +931,7 @@ class Form extends MylsEditableObject {
 		$.ajax({
 			type: "post",
 			cache: false,
-			url: "/form/insertlookup",
+			url: "form/insertlookup",
 			data: ({'id': column.id, 'params': values}),
 			success: function (data) {
 				//console.log(column);
@@ -1069,7 +1069,7 @@ class Form extends MylsEditableObject {
 			if (form.execProc.proc) {
 				const proc = await this.dependencies.doCondition(`='${form.execProc.proc}'`, undefined, false);
 				if (proc) {
-					const result = await app.processData('/form/getdbdata', 'post', {'proc': proc, 'geterror': true});
+					const result = await app.processData('form/getdbdata', 'post', {'proc': proc, 'geterror': true});
 					this.processResult(result);
 					if (form.execProc.reload == 'reload') {
 						this.reloadData('upd');
@@ -1839,7 +1839,7 @@ class Form extends MylsEditableObject {
 	async reloadData(mode) {
 		const ext_id = mode == 'ins' ? -1 : this.ext_id;
 
-		const loadData = app.processData('/form/tabledata', 'post', this.prepareTableData(ext_id, mode));
+		const loadData = app.processData('form/tabledata', 'post', this.prepareTableData(ext_id, mode));
 		let data = await loadData;
 		this.saveAndAdd = mode == 'ins' ? true : false;
 		this.clearObjectsValues();

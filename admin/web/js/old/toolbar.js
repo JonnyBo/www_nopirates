@@ -135,7 +135,7 @@ function initToolbar(toolbar, items, options, table, ext_id, type, tHistory, col
 							multiple: false,
 							allowedFileExtensions: [".csv", ".xls", ".xlsx"],
 							uploadMode: "instantly",
-							uploadUrl: "/frame/uploadfile?field=" + idn + '_fileUploader',
+							uploadUrl: "frame/uploadfile?field=" + idn + '_fileUploader',
 							name: idn + '_fileUploader',
 							minFileSize: 10,
 							onUploaded: function (e) {
@@ -175,7 +175,7 @@ function initToolbar(toolbar, items, options, table, ext_id, type, tHistory, col
 											$.ajax({
 												type: "POST",
 												cache: false,
-												url: "/frame/importfromfiles",
+												url: "frame/importfromfiles",
 												data: {files: filename, table_id: table},
 												success: function (data) {
 													//console.log(data);
@@ -257,7 +257,7 @@ function initToolbar(toolbar, items, options, table, ext_id, type, tHistory, col
 					let state = obj.state();
 					prepareStorage(state);
 					$.ajax({
-						url: "/frame/tablesetting",
+						url: "frame/tablesetting",
 						method: 'post',
 						data: {'table': table, 'state': JSON.stringify(state)},
 						//dataType: dataType,

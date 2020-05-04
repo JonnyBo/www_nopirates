@@ -92,7 +92,7 @@ class Charts extends MylsObject {
                     if (self.datas.hasOwnProperty(tableId))
                         return self.datas[tableId];
                     else {
-                        const result = await app.processData('/frame/tabledata', 'post', self.prepareTableData());
+                        const result = await app.processData('frame/tabledata', 'post', self.prepareTableData());
                         self.datas[tableId] = self.processData(result);
                         return self.datas[tableId];
                     }

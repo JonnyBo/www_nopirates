@@ -429,7 +429,7 @@ function loadLookupData(column, tableData, columns, tHistory, selParams) {
 		return column.editor.getDataSource().items();
 	} else {
 		column.dataParams = jpParams;
-		return getData('/form/getlookup', 'post', params);
+		return getData('form/getlookup', 'post', params);
 	}
 }
 
@@ -445,7 +445,7 @@ function initLookupValues(column, tableData) {
 
 	params.lang = config.lang;
 	params.company_id = config.company_id;
-	return getData('/form/getlookupvalues', 'get', {'id': column.id, 'params': JSON.stringify(params)});
+	return getData('form/getlookupvalues', 'get', {'id': column.id, 'params': JSON.stringify(params)});
 }
 
 function initBottomToollbar(idn, total, selected) {
