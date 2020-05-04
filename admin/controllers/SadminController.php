@@ -11,7 +11,7 @@ use yii\filters\VerbFilter;
 use yii\web\HttpException;
 use yii\base\ErrorException;
 
-class AdminController extends Controller
+class SadminController extends Controller
 {
 
     use FunctionController;

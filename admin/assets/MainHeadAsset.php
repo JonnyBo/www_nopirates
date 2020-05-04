@@ -20,20 +20,20 @@ class MainHeadAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        '/golden-layout/goldenlayout-base.css',
-        '/golden-layout/goldenlayout-light-theme.css',
+        'golden-layout/goldenlayout-base.css',
+        'golden-layout/goldenlayout-light-theme.css',
         'css/spectrum.css',
     ];
     public $js = [
-        '/js/detect.js',
-        '/ckeditor5/ckeditor.js',
-        '/golden-layout/goldenlayout.min.js',
-        'devExtreme/Lib/js/dx.all.debug.js',
+        'js/detect.js',
+        'ckeditor5/ckeditor.js',
+        'golden-layout/goldenlayout.min.js',
+        'devExtreme/Lib/js/dx.all.js',
         'devExtreme/Lib/js/localization/dx.messages.ru.js',
         'devExtreme/Lib/js/vectormap-data/world.js',
         'js/jquery.color-2.1.2.js',
         'js/spectrum.js',
-        '/resize-sensor/resizeSensor.min.js',
+        'resize-sensor/resizeSensor.min.js',
     ];
     public $jsOptions = [
         'position' => \yii\web\View::POS_HEAD

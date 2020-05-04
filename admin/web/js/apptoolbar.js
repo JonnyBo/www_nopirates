@@ -78,7 +78,7 @@ class AppToolbar {
         }, {
             id: "3",
             //html: '<i id="logout" class="dx-icon-runner"></i>',
-            icon: '/img/blank-avatar.svg',
+            icon: 'img/blank-avatar.svg',
             items: [{
                 id: "help",
                 name: app.translate.saveString("Помощь"),

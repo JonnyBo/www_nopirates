@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<img src="/img/cover.png" class="myls-login-cover" alt="">
+<img src="img/cover.png" class="myls-login-cover" alt="">
 <div class="myls-login-form">
     <div class="mylsLoginTitle">
         <div class="mylsIcon d-flex justify-content-center align-items-center" style="background-color: <?=Yii::$app->params['logoColor'];?>">
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="mylsTitle"  style="color: <?=Yii::$app->params['logoColor'];?>"><?=Yii::$app->params['projectName'];?></div>
     </div>
-    <form action="/site/login" id="form-container" method="post">
+    <form action="site/login" id="form-container" method="post">
         <div id="mylsAuthForm"></div>
     </form>
 </div>

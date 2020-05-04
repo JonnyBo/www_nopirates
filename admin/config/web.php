@@ -8,8 +8,8 @@ $config = [
     'basePath' => dirname(__DIR__),
     //'baseUrl' => '/admin',
     'vendorPath' => dirname(dirname(dirname(__DIR__))) . '/yii2-basic/vendor',
-    //'bootstrap' => ['log'],
-    'bootstrap' => ['AssetsMinify'],
+    'bootstrap' => ['log'],
+    //'bootstrap' => ['AssetsMinify'],
     'aliases' => [
         '@bower' => dirname(dirname(dirname(__DIR__))) . '/yii2-basic/vendor/bower-asset',
         '@npm' => dirname(dirname(dirname(__DIR__))) . '/yii2-basic/vendor/npm-asset',
@@ -24,7 +24,7 @@ $config = [
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            //'baseUrl' => 'admin/',
+            //'baseUrl' => '/admin/',
             'cookieValidationKey' => 'SYvKEBTZ2K0fyaJnghquU7eB4DPcLqUl',
             'enableCsrfValidation' => false,
             'enableCookieValidation' => false,
@@ -97,7 +97,7 @@ $config = [
         ],
         'AssetsMinify' => [
             'class' => '\soladiem\autoMinify\AssetsMinify',
-            'enabled' => true,
+            'enabled' => false,
             'htmlCompress' => false,
             'cssFileBottom' => false,
             'jsFileCompress' => true,
@@ -127,6 +127,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'baseUrl' => '/admin',
             'rules' => [
 
             ],
