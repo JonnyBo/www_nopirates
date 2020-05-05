@@ -2,11 +2,11 @@
 
 error_reporting(E_ERROR);
 
-//$is_dev = strpos($_SERVER['HTTP_HOST'], 'dev.') !== false;
-//if ($is_dev){
+$is_dev = strpos($_SERVER['HTTP_HOST'], 'dev.') !== false;
+if ($is_dev){
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
-//}
+}
 
 require __DIR__ . '/../../../yii2-basic/vendor/autoload.php';//меняем для админки
 require __DIR__ . '/../../../yii2-basic/vendor/yiisoft/yii2/Yii.php';//меняем для админки
