@@ -7,7 +7,7 @@ class MylsLocalization {
 
     async getTranslate() {
 
-        let translate = await app.processData("/site/loadtranslate", "post");
+        let translate = await app.processData("site/loadtranslate", "post");
         DevExpress.localization.loadMessages(translate);
         if (translate != '') {
             this.translate = translate;
@@ -128,7 +128,7 @@ class MylsLocalization {
 
     saveFileTranslate() {
         if (this.mode == 'development') {
-            app.processData("/site/savetranslate", 'post', {data: this.translate});
+            app.processData("site/savetranslate", 'post', {data: this.translate});
         }
     }
 

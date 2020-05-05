@@ -131,7 +131,7 @@ class SiteController extends Controller
 
                 return $this->render('index');
             } else {
-                return $this->redirect('site/login');
+                return $this->redirect('login');
             }
         }
     }

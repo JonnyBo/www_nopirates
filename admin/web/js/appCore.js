@@ -8,6 +8,13 @@ class AppCore {
 
 	//получение данных
 	processData(url, method, data) {
+		/*
+		if (url[0] === '/') {
+			url = url.substr(1);
+		}
+
+		 */
+		//url = location.origin + '/' + url;
 		if (data === null || data === undefined) data = '';
 		try {
 			/*
