@@ -8,17 +8,19 @@ error_reporting(E_ERROR);
     defined('YII_ENV') or define('YII_ENV', 'dev');
 //}
 
-require __DIR__ . '/../../../yii2-basic/vendor/autoload.php';
-require __DIR__ . '/../../../yii2-basic/vendor/yiisoft/yii2/Yii.php';
+require __DIR__ . '/../../../yii2-basic/vendor/autoload.php';//меняем для админки
+require __DIR__ . '/../../../yii2-basic/vendor/yiisoft/yii2/Yii.php';//меняем для админки
 
 $config = require __DIR__ . '/../config/web.php';
-/*
+
+$domen = current(explode('.', $_SERVER['HTTP_HOST'], 2));
+//echo $domen;
+
 if ($_SERVER['HTTP_HOST'] == 'myls.education' or $_SERVER['HTTP_HOST'] == 'www.myls.education') {
     $config = require __DIR__ . '/../config/web.php';
-} elseif (strpos($_SERVER['HTTP_HOST'], 'freedatest.') !== false) {
-    //$config = require __DIR__ . '/../config/web_freeda.php';
-    $config = array_replace_recursive($config, require __DIR__ . '/../config/web_freedatest.php');
-} elseif (strpos($_SERVER['HTTP_HOST'], 'test.') !== false) {
+} elseif (strpos($_SERVER['HTTP_HOST'], $domen . '.') !== false) {
+    $config = array_replace_recursive($config, require __DIR__ . '/../config/web_' . $domen . '.php');
+} /*elseif (strpos($_SERVER['HTTP_HOST'], 'test.') !== false) {
     //$config = require __DIR__ . '/../config/web_test.php';
     $config = array_replace_recursive($config, require __DIR__ . '/../config/web_test.php');
 } elseif (strpos($_SERVER['HTTP_HOST'], 'testrus.') !== false) {
@@ -48,8 +50,6 @@ if ($_SERVER['HTTP_HOST'] == 'myls.education' or $_SERVER['HTTP_HOST'] == 'www.m
     $config = array_replace_recursive($config, require __DIR__ . '/../config/web_nopirates.php');
 }
 */
-/*else {
-    $config = require __DIR__ . '/../config/web.php';
-}*/
+
 
 (new yii\web\Application($config))->run();

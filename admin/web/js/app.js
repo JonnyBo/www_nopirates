@@ -220,7 +220,7 @@ class App extends AppCore {
 			message: this.translate.saveString('Загрузка'),
 			container: '#' + idn + '-loadpanel',
 			closeOnOutsideClick: false,
-			indicatorSrc: "/img/loader.svg"
+			indicatorSrc: "img/loader.svg"
 		}).dxLoadPanel("instance");
 		if (loadPanel)
 			loadPanel.show();

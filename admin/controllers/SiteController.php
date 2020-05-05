@@ -26,12 +26,12 @@ class SiteController extends Controller
 
     public function init()
     {
-        //$domain = current(explode('.', Yii::$app->getRequest()->serverName, 2));
-        $domain = 'nopirates';
-        //if ($domain !== 'myls') {
+        $domain = current(explode('.', Yii::$app->getRequest()->serverName, 2));
+        //$domain = 'nopirates';
+        if ($domain !== 'myls') {
             $this->getFirstData(true);
             $this->layout = 'main';
-        //}
+        }
 
     }
 
@@ -91,8 +91,8 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //print_r($_SESSION);
-        $domen = 'nopirates';
-        //$domen = current(explode('.', Yii::$app->getRequest()->serverName, 2));
+        //$domen = 'nopirates';
+        $domen = current(explode('.', Yii::$app->getRequest()->serverName, 2));
         if ($domen == 'myls') {
             $this->layout = 'main_preview';
             return $this->render('preview');
@@ -421,6 +421,7 @@ class SiteController extends Controller
             }
             $result = $dirname;
         }
+        //Yii::info($result, 'dev_log');
         return $result;
     }
 

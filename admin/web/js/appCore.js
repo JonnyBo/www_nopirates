@@ -44,7 +44,7 @@ class AppCore {
 	}
 
 	async getSettings() {
-		let setting = await this.processData('/site/settings', 'POST', null);
+		let setting = await this.processData('site/settings', 'POST', null);
 		this.config = setting;
 		this.config.lang = this.config.lang ? this.config.lang : "en";
 		this.config.company_id = this.config.company_id ? this.config.company_id : 1;
@@ -71,7 +71,7 @@ class AppCore {
 					}
 				}
 			}
-			this.processData('/site/settings', 'POST', {'data': this.config});
+			this.processData('site/settings', 'POST', {'data': this.config});
 		}
 	}
 

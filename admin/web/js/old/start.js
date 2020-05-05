@@ -96,7 +96,7 @@ function setData(url, method, data) {
 
 function getSettings() {
     var deferred = new $.Deferred;
-    var setting = getData('/site/settings', 'post', null);
+    var setting = getData('site/settings', 'post', null);
     $.when(setting).done(function (sett) {
         //debugger;
         config = sett;
@@ -117,7 +117,7 @@ function getSettings() {
 function setSettings() {
     /*
     var deferred = new $.Deferred;
-    var setting = setData('/site/settings', 'post', {'data': config});
+    var setting = setData('site/settings', 'post', {'data': config});
     $.when(setting).done(function (sett) {
         deferred.resolve();
     }).fail(function () {
@@ -133,7 +133,7 @@ function saveSettings() {
     //console.log(allowSaveSetting);
     if (allowSaveSetting)  {
         allowSaveSetting = false;
-        var setting = setData('/site/settings', 'post', {'data': config});
+        var setting = setData('site/settings', 'post', {'data': config});
         $.when(setting).done(function (sett) {
             deferred.resolve();
         }).fail(function () {

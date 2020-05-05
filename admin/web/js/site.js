@@ -7,7 +7,7 @@ $(async () => {
 
 DevExpress.ui.dxLoadIndicator.defaultOptions({
     options: {
-        indicatorSrc: '/img/loader.svg'
+        indicatorSrc: 'img/loader.svg'
     }
 });
 

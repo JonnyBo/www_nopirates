@@ -315,7 +315,7 @@ class Toolbar {
 
 		function getExitBtnOptions() {
 			return {
-				icon: "/img/exit.svg",
+				icon: "img/exit.svg",
 				elementAttr: {
 					toolbarrole: "always",
 					buttonrole: "exit",
@@ -391,7 +391,7 @@ class Toolbar {
 	getAddBtnOptions() {
 		const self = this;
 		return {
-			icon: "/img/insert.svg",
+			icon: "img/insert.svg",
 			elementAttr: {
 				toolbarrole: "always",
 				buttonrole: "add",
@@ -410,7 +410,7 @@ class Toolbar {
 				toolbarrole: "focused",
 				buttonrole: "edit",
 			},
-			icon: "/img/edit.svg",
+			icon: "img/edit.svg",
 			visible: !this.isEdit,
 			disabled: disable,
 			onClick: function (e) {
@@ -428,7 +428,7 @@ class Toolbar {
 				buttonrole: "delete",
 			},
 			visible: !this.isEdit,
-			icon: "/img/delete.svg",
+			icon: "img/delete.svg",
 			disabled: disable,
 			onClick: async function (e) {
 				//проверка отмеченных строк
@@ -486,7 +486,7 @@ class Toolbar {
 				toolbarrole: "always",
 				buttonrole: "refresh",
 			},
-			icon: "/img/refresh.svg",
+			icon: "img/refresh.svg",
 			visible: !self.isEdit,
 			onClick: function (e) {
 				self.mylsObject.refresh();

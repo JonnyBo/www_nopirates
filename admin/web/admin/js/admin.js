@@ -148,7 +148,7 @@ function openLoadPanel(idn) {
         message: saveString('Загрузка'),
         container: '#' + idn + '-loadpanel',
         closeOnOutsideClick: false,
-        indicatorSrc: "/img/loader.svg"
+        indicatorSrc: "img/loader.svg"
     }).dxLoadPanel("instance");
     if (loadPanel)
         loadPanel.show();
@@ -712,7 +712,7 @@ function initMenu(formMenu) {
                         //console.log(e.itemData);
                         //openPopup(e.itemData.id, '', 'form', 'setup', []);
                         openTabs('#form-'+e.itemData.id+'_tab', e.itemData.name, 'formEditor', '', []);
-                        var xml = getData('/form/getxml?table='+e.itemData.id, 'get');
+                        var xml = getData('form/getxml?table='+e.itemData.id, 'get');
                         $('#form-'+e.itemData.id+'_tab').wrapAll('<div id ="form-'+e.itemData.id+'_container" class="d-flex w-100 h-100 myls-form"><div class="myls-form-edit-container w-50"></div></div>');
                         $('#form-'+e.itemData.id+'_container').append('<div class="myls-xml-edit-container w-50 d-flex flex-column"><div class="myace-editor  h-100 w-100" id="form-'+e.itemData.id+'_myace-editor"></div></div>');
                         $('#form-'+e.itemData.id+'_tab').prepend('<div class="dx-popup-title dx-toolbar"><div class="dx-toolbar-label">'+e.itemData.name+'</div></div>');
@@ -751,9 +751,9 @@ function initMenu(formMenu) {
                                     onClick: function (el) {
                                         //openLoadPanel(idn);
                                         var code = ace.edit('form-'+e.itemData.id+'_myace-editor').getValue();
-                                        var result = setData('/form/setxml', 'post', {xml: JSON.stringify(code), table: e.itemData.id});
+                                        var result = setData('form/setxml', 'post', {xml: JSON.stringify(code), table: e.itemData.id});
                                         $.when(result).done(function () {
-                                            var template = getData('/form/getformtemplate', 'post', {xml: JSON.stringify(code)});
+                                            var template = getData('form/getformtemplate', 'post', {xml: JSON.stringify(code)});
                                             $.when(template).done(function (tpl) {
                                                 console.log(tpl);
                                                 initForm(e.itemData.id, '', 'tab', 'setup', [], [], tpl);
@@ -783,7 +783,7 @@ function initMenu(formMenu) {
                                     onClick: function (el) {
                                         openLoadPanel(idn);
                                         var code = ace.edit('form-'+e.itemData.id+'_myace-editor').getValue();
-                                        var template = getData('/form/getformtemplate', 'post', {xml: JSON.stringify(code)});
+                                        var template = getData('form/getformtemplate', 'post', {xml: JSON.stringify(code)});
                                         $.when(template).done(function (tpl) {
                                             initForm(e.itemData.id, '', 'tab', 'setup', [], [], tpl);
                                             DevExpress.ui.notify('Завершено!', 'success', 600);
@@ -839,7 +839,7 @@ function initMenu(formMenu) {
             }, {
                 id: "3_2",
                 name: saveString("Выход"),
-                link: '/site/logout',
+                link: 'site/logout',
             }]
         }];
 
@@ -996,12 +996,12 @@ var appInfo = {
 
 $(function () {
     //openLoadPanel("main");
-    var siteTranslate = getData("/site/loadtranslate", "json");
+    var siteTranslate = getData("site/loadtranslate", "json");
     var settings = getSettings();
 
     //var menu = getData('menu/getmenu', 'get');
 
-    var menu = getData('/admin/getallforms', 'get');
+    var menu = getData('admin/getallforms', 'get');
 
     var quickActions = getData('menu/getquickactions', 'get');
     var tables = getAllTablesInfo();
@@ -1079,7 +1079,7 @@ $(function () {
 
     DevExpress.ui.dxLoadIndicator.defaultOptions({
         options: {
-            indicatorSrc: '/img/loader.svg'
+            indicatorSrc: 'img/loader.svg'
         }
     });
 
