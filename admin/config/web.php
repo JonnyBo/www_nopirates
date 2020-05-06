@@ -129,7 +129,10 @@ $config = [
             'showScriptName' => false,
             //'baseUrl' => '/admin',
             'rules' => [
-                'login' => 'site/login'
+                'login' => 'auth/login',
+                'registration' => 'auth/registration',
+                'restore' => 'auth/restore',
+                'logout' => 'auth/logout',
             ],
         ],
     ],

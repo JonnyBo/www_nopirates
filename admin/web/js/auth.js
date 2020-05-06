@@ -18,18 +18,18 @@ class Auth {
                 this.formIdn = 'mylsRestoreForm';
                 this.token = app.getUrlParameter('token');
                 if (this.token) {
-                    $('#form-container').attr('action', '/site/restore?token=' + this.token);
+                    $('#form-container').attr('action', 'restore?token=' + this.token);
                 }
                 break;
         }
     }
 
     getUserData(token) {
-        this.userData = app.processData('/site/regurl-decode', 'POST', {token: token});
+        this.userData = app.processData('site/regurl-decode', 'POST', {token: token});
     }
 
     checkUserMail(email) {
-        return app.processData('/site/checkuser', 'POST', {email: email});
+        return app.processData('site/checkuser', 'POST', {email: email});
     }
 
     createForm() {
@@ -340,7 +340,7 @@ class Auth {
                 text: app.translate.saveString("Авторизация"),
             },
             template: function(data) {
-                return '<a href="/site/login" title="'+app.translate.saveString("Войти")+'">'+app.translate.saveString("Войти")+'</a>';
+                return '<a href="login" title="'+app.translate.saveString("Войти")+'">'+app.translate.saveString("Войти")+'</a>';
             }
         }
     }
@@ -373,7 +373,7 @@ class Auth {
                 visible: false
             },
             template: function (data) {
-                return '<a href="/site/restore" title="' + app.translate.saveString("Восстановить пароль") + '">' + app.translate.saveString("Забыли пароль?") + '</a>';
+                return '<a href="restore" title="' + app.translate.saveString("Восстановить пароль") + '">' + app.translate.saveString("Забыли пароль?") + '</a>';
             }
         }
     }

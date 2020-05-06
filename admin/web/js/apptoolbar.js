@@ -90,7 +90,7 @@ class AppToolbar {
             }, {
                 id: "3_2",
                 name: app.translate.saveString("Выход"),
-                link: '/site/logout',
+                link: 'logout',
             }]
         }];
     }
@@ -105,7 +105,7 @@ class AppToolbar {
                     cacheRawData:false,
                     load: async function (loadOptions) {
                         let params = {'lang': app.config.lang};
-                        let result = await app.processData('/form/getallsearchlookup', 'post', params);
+                        let result = await app.processData('form/getallsearchlookup', 'post', params);
                         return result;
                     },
                 }
