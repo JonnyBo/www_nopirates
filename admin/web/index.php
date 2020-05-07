@@ -3,6 +3,7 @@
 error_reporting(E_ERROR);
 
 $is_dev = strpos($_SERVER['HTTP_HOST'], 'dev.') !== false;
+
 if ($is_dev){
     defined('YII_DEBUG') or define('YII_DEBUG', true);
     defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -14,12 +15,14 @@ require __DIR__ . '/../../../yii2-basic/vendor/yiisoft/yii2/Yii.php';//меня�
 $config = require __DIR__ . '/../config/web.php';
 
 $domen = current(explode('.', $_SERVER['HTTP_HOST'], 2));
-//echo $domen;
+
+
 
 if ($_SERVER['HTTP_HOST'] == 'myls.education' or $_SERVER['HTTP_HOST'] == 'www.myls.education') {
     $config = require __DIR__ . '/../config/web.php';
 } elseif (strpos($_SERVER['HTTP_HOST'], $domen . '.') !== false) {
-    $config = array_replace_recursive($config, require __DIR__ . '/../config/web_' . $domen . '.php');
+    if (file_exists(__DIR__ . '/../config/web_' . $domen . '.php'))
+        $config = array_replace_recursive($config, require __DIR__ . '/../config/web_' . $domen . '.php');
 } /*elseif (strpos($_SERVER['HTTP_HOST'], 'test.') !== false) {
     //$config = require __DIR__ . '/../config/web_test.php';
     $config = array_replace_recursive($config, require __DIR__ . '/../config/web_test.php');
