@@ -63,9 +63,11 @@ class Saver extends Component {
 
         if (!$result) {
             Yii::$app->session->setFlash('error','Sending error.');
-            throw new \RuntimeException('Sending error.');
+            return false;
+            //throw new \RuntimeException('Sending error.');
         } else {
             Yii::$app->session->setFlash('result', $result);
+            return true;
         }
     }
 }

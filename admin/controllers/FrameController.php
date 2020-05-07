@@ -520,6 +520,8 @@ class FrameController extends Controller
 
     public function actionGetalltablesinfo()
     {
+        Yii::info(Yii::$app->datadb, 'dev_log');
+        Yii::info(Yii::$app->db, 'dev_log');
         $result = $this->getAllTablesInfo();
         $res = [];
         foreach ($result as $idx => $item) {
@@ -539,6 +541,7 @@ class FrameController extends Controller
             if (empty($this->mainSQLs['tableSQL']))
                 throw new HttpException(500, 'Ошибка первого запроса: Нет запроса на получение информации от таблице');
             $params = [':user_id' => $this->userID];
+            Yii::info($this->mainSQLs['tableSQL'], 'dev_log');
             $result = $this->selectAll($this->mainSQLs['tableSQL'], $params, $this->db);
             $res = [];
             if ($result['success']) {

@@ -298,18 +298,78 @@ class SocialsController extends \yii\web\Controller
     }
 
     public function actionSend() {
+        $db = Yii::$app->db;
+        $files = [];
+        $email = 'evgen-borisov@yandex.ru; alexeyparallel@gmail.com';
+        try {
+            $sql = 'select object_id from get_objects_by_status(:status_id)';
+            $params = [':status_id' => 4];
+            $objects = $db->createCommand($sql, $params)->queryAll();
+            if (!empty($objects)) {
+                $saver = Yii::$app->saver;
+                foreach ($objects as $obj) {
+                    $sql = 'select mail_text, title, original_title from get_object_first_mail_text(:object_id)';
+                    $params = [':object_id' => $obj['object_id']];
+                    if ($mail = $db->createCommand($sql, $params)->queryOne()) {
+                        //print_r($mail);
+                        $text_mail = str_replace('{title}', $mail['title'], $mail['mail_text']);
+                        $text_mail = str_replace('{original_title}', $mail['original_title'], $text_mail);
+                        /*
+                        $sql = 'select doc_name, doc_link from get_documents_by_object(:object_id)';
+                        $documents = $db->createCommand($sql, $params)->queryAll();
+                        if (!empty($documents)) {
+                            foreach ($documents as $doc) {
+                                $files[] = $doc['doc_link'];
+                            }
+                        }
+                        */
+                        //echo $text_mail;
+                        $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
+                        $params[':status_id'] = 4;
+                        //print_r($params);
+                        $sites = $db->createCommand($sql, $params)->queryAll();
+                        print_r($sites);
+                        //echo '<br>--------------------------------------------------<br>';
+
+                        if (!empty($sites)) {
+                            foreach ($sites as $site) {
+                                $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
+                                $params[':site_id'] = $site['site_id'];
+                                $links = $db->createCommand($sql, $params)->queryAll();
+                                if (!empty($links)) {
+                                    foreach ($links as $link) {
+                                        $text_mail .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
+    ;                                }
+                                }
+                                if ($saver->sentEmail($email, $text_mail, $tpl = false, $files)) {
+                                    printf('<p>отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
+                                } else {
+                                    printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+        /*
+        print_r($objects);
         $saver = Yii::$app->saver;
         $files = [
             'http://oasis-light.ru/files/klassicheskiy.pdf',
             //'http://myls.education/files/034cb5f61282145049fcae456e3c4e6b_Diploma Margarita Korolchenko B1.pdf',
             //'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
         ];
-        $email = 'evgen-borisov@yandex.ru';
+        $email = 'evgen-borisov@yandex.ru; alexeyparallel@gmail.com';
         $info = [
             'name' => 'Евгений',
             'message' => 'Тестовое сообщение.'
         ];
-        $saver->sentEmail($email, $info, $tpl = false, $files);
+        //$saver->sentEmail($email, $info, $tpl = false, $files);
+        */
     }
 
     private function getObject($objects, $object_id) {

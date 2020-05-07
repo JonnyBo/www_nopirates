@@ -170,6 +170,7 @@ trait FunctionController
                 'success' => $result,
             );
         } catch (\Exception $ex) {
+            Yii::info($ex->getMessage(), 'dev_log');
             $transaction->rollback();
             return array(
                 'error' => $this->getErrorStr($ex->getMessage())
