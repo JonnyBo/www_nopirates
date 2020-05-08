@@ -3,7 +3,7 @@ body {
     height: 100%;
 }
 
-body {
+body.login {
     background-image: url("../img/bg.jpg");
     background-size: cover;
     background-position: center;
