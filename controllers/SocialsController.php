@@ -298,8 +298,10 @@ class SocialsController extends \yii\web\Controller
     }
 
     public function actionSend() {
+        set_time_limit(0);
         $db = Yii::$app->db;
-        $email = 'evgen-borisov@yandex.ru';
+        //$email = 'evgen-borisov@yandex.ru';
+        $email = ['alexeyparallel@gmail.com', 'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'];
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
             $params = [':status_id' => 4];
@@ -335,11 +337,15 @@ class SocialsController extends \yii\web\Controller
                                 if (!empty($links)) {
                                     foreach ($links as $link) {
                                         $text_links .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
-    ;                                }
+                                    }
                                 }
                                 $info = ['message' => $text_mail, 'links' => $text_links];
+
                                 if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
-                                    printf('<p>отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
+                                    sleep(5);
+                                    printf('<p>отправлено письмо: объект - %s, сайт - %s, документов - %s</p>', $mail['title'], $site['site_id'], count($files));
+                                    $sql = 'execute procedure set_objects_first_email(:object_id, :site_id, :status_id)';
+                                    $db->createCommand($sql, $params)->execute();
                                 } else {
                                     printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
                                 }
