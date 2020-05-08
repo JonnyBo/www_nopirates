@@ -17,8 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'login-form',
         'layout' => 'horizontal',
         'fieldConfig' => [
-            'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            'labelOptions' => ['class' => 'col-lg-1 control-label'],
+            'template' => "{label}\n<div class=\"col-3\">{input}</div>\n<div class=\"col-8\">{error}</div>",
+            //'labelOptions' => ['class' => 'col-lg-1 control-label'],
         ],
     ]); ?>
 
@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field($model, 'password')->passwordInput() ?>
 
         <?= $form->field($model, 'rememberMe')->checkbox([
-            'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
+            'template' => "<div class=\"col-lg-offset-1 \">{input} {label}</div>\n<div >{error}</div>",
         ]) ?>
 
         <div class="form-group">
