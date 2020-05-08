@@ -5,10 +5,8 @@ use yii\helpers\Html;
 
 ?>
 
-Привет, <?=$name?>!<br>
+<?= $message ?>
 <br>
-<?= $message ?><br>
 <br>
-Есть вопросы? Пишите в нашу службу поддержки: <br>
-<br>
-С уважением, команда Myls.school
+<?= $links ?>
+

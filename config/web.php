@@ -67,7 +67,13 @@ $config = [
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false
+            'showScriptName' => false,
+            'rules' => [
+                'login' => 'site/login',
+                //'registration' => 'auth/registration',
+                //'restore' => 'auth/restore',
+                'logout' => 'site/logout',
+            ],
         ],
         /*
         'assetManager' => [

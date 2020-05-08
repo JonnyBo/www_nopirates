@@ -300,7 +300,8 @@ class SocialsController extends \yii\web\Controller
     public function actionSend() {
         $db = Yii::$app->db;
         $files = [];
-        $email = 'evgen-borisov@yandex.ru; alexeyparallel@gmail.com';
+        $text_links = $text_mail = '';
+        $email = 'evgen-borisov@yandex.ru';
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
             $params = [':status_id' => 4];
@@ -314,23 +315,17 @@ class SocialsController extends \yii\web\Controller
                         //print_r($mail);
                         $text_mail = str_replace('{title}', $mail['title'], $mail['mail_text']);
                         $text_mail = str_replace('{original_title}', $mail['original_title'], $text_mail);
-                        /*
                         $sql = 'select doc_name, doc_link from get_documents_by_object(:object_id)';
                         $documents = $db->createCommand($sql, $params)->queryAll();
                         if (!empty($documents)) {
                             foreach ($documents as $doc) {
-                                $files[] = $doc['doc_link'];
+                                $files[] = $doc;
                             }
                         }
-                        */
                         //echo $text_mail;
                         $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
                         $params[':status_id'] = 4;
-                        //print_r($params);
                         $sites = $db->createCommand($sql, $params)->queryAll();
-                        print_r($sites);
-                        //echo '<br>--------------------------------------------------<br>';
-
                         if (!empty($sites)) {
                             foreach ($sites as $site) {
                                 $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
@@ -338,10 +333,11 @@ class SocialsController extends \yii\web\Controller
                                 $links = $db->createCommand($sql, $params)->queryAll();
                                 if (!empty($links)) {
                                     foreach ($links as $link) {
-                                        $text_mail .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
+                                        $text_links .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
     ;                                }
                                 }
-                                if ($saver->sentEmail($email, $text_mail, $tpl = false, $files)) {
+                                $info = ['message' => $text_mail, 'links' => $text_links];
+                                if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
                                     printf('<p>отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
                                 } else {
                                     printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
