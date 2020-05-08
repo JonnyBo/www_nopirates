@@ -2,8 +2,8 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-    'projectName' => 'Myls.school',
-    'logoCode' => 'Sc',
+    'projectName' => 'Myls.AntiPirates',
+    'logoCode' => 'AP',
     'logoColor' => '#F07A71',
     'languages' => [
         ['name' => 'English', 'code' => 'en', 'icon' => '', 'default' => true],
