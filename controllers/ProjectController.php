@@ -174,9 +174,9 @@ class ProjectController extends \yii\web\Controller
                             //echo $data;
                             //exit();
                             $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
-                            //$objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
+                            $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
                             //echo Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
-                            $searchs = $loader->getSearchStrings();
+                            $searchs = $loader->getSearchStrings($objects);
                             if (!empty($searchs)) {
                                 $data = [];
                                 include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
@@ -189,11 +189,13 @@ class ProjectController extends \yii\web\Controller
                                     Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
                                 } else {
                                     //сохраняем данные
+                                    /*
                                     if (!empty($data)) {
                                         foreach ($data as $res) {
                                             $this->saveResult($res['object_id'], $res['url']);
                                         }
                                     }
+                                    */
                                     Yii::$app->session->setFlash('result', $result);
                                 }
                             }

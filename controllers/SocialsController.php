@@ -301,7 +301,7 @@ class SocialsController extends \yii\web\Controller
         set_time_limit(0);
         $db = Yii::$app->db;
         //$email = 'evgen-borisov@yandex.ru';
-        $email = ['alexeyparallel@gmail.com', 'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'];
+        $email = ['alexeyparallel@gmail.com', /*'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'*/];
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
             $params = [':status_id' => 4];
@@ -331,7 +331,7 @@ class SocialsController extends \yii\web\Controller
                         if (!empty($sites)) {
                             foreach ($sites as $site) {
                                 if ($site['email']) {
-                                    $email = [$site['email']];
+                                    //$email = [$site['email']];
                                     $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
                                     $params[':site_id'] = $site['site_id'];
                                     $links = $db->createCommand($sql, $params)->queryAll();
