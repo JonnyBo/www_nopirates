@@ -299,8 +299,6 @@ class SocialsController extends \yii\web\Controller
 
     public function actionSend() {
         $db = Yii::$app->db;
-        $files = [];
-        $text_links = $text_mail = '';
         $email = 'evgen-borisov@yandex.ru';
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
@@ -311,12 +309,14 @@ class SocialsController extends \yii\web\Controller
                 foreach ($objects as $obj) {
                     $sql = 'select mail_text, title, original_title from get_object_first_mail_text(:object_id)';
                     $params = [':object_id' => $obj['object_id']];
+                    $text_mail = '';
                     if ($mail = $db->createCommand($sql, $params)->queryOne()) {
                         //print_r($mail);
                         $text_mail = str_replace('{title}', $mail['title'], $mail['mail_text']);
                         $text_mail = str_replace('{original_title}', $mail['original_title'], $text_mail);
                         $sql = 'select doc_name, doc_link from get_documents_by_object(:object_id)';
                         $documents = $db->createCommand($sql, $params)->queryAll();
+                        $files = [];
                         if (!empty($documents)) {
                             foreach ($documents as $doc) {
                                 $files[] = $doc;
@@ -331,6 +331,7 @@ class SocialsController extends \yii\web\Controller
                                 $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
                                 $params[':site_id'] = $site['site_id'];
                                 $links = $db->createCommand($sql, $params)->queryAll();
+                                $text_links = '';
                                 if (!empty($links)) {
                                     foreach ($links as $link) {
                                         $text_links .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
