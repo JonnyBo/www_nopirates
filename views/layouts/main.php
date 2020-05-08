@@ -23,7 +23,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body <?= str_replace('/', '', Yii::$app->request->url) ?>">
+<body class="<?= str_replace('/', '', Yii::$app->request->url) ?>">
 <?php $this->beginBody() ?>
 
 <div class="wrap">
