@@ -62,6 +62,7 @@ class Saver extends Component {
         }
         $result->setFrom(['legal@antipirates.ru']);
         $result->setTo($email);
+        $result->setBcc(['legal@antipirates.ru']);
         $result->setSubject('Сообщение от правообладателя');
         $result->send();
 
