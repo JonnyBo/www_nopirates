@@ -3,6 +3,24 @@ body {
     height: 100%;
 }
 
+body {
+    background-image: url("../img/bg.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.site-login {
+    padding: 20px;
+    width: 360px;
+    margin: auto;
+    background-color: white;
+}
+
+.site-login .form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
+}
+
 .wrap {
     min-height: 100%;
     height: auto;
@@ -96,9 +114,9 @@ a.desc:after {
     border: none;
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
     .nav li > form > button.logout {
-        display:block;
+        display: block;
         text-align: left;
         width: 100%;
         padding: 10px 15px;
