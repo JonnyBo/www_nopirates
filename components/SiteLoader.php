@@ -335,13 +335,15 @@ class SiteLoader extends Component
         $tituls = [];
         if (!empty($objects)) {
             foreach ($objects as $object) {
-                if ($object->original_title)
-                    $tituls[$object->object_id][] = '"' . $object->original_title . '"';
-                $tituls[$object->object_id][] = '"' . $object->title . '"';
+                //if ($object->original_title)
+                //    $tituls[$object->object_id][] = '"' . $object->original_title . '"';
+                //$tituls[$object->object_id][] = '"' . $object->title . '"';
                 if ($object->year_prod)
                     $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->year_prod . '"';
-                if ($object->director)
-                    $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->director . '"';
+                else
+                    $tituls[$object->object_id][] = '"' . $object->title . '"';
+               /* if ($object->director)
+                    $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->director . '"';*/
             }
         }
         return $tituls;

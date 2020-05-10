@@ -156,7 +156,7 @@ class Dependencies {
 	async getValueFromDB(field, item, column) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const value = await app.processData('/form/getdbdata', 'post', {'proc': field});
+				const value = await app.processData('form/getdbdata', 'post', {'proc': field});
 				resolve({
 					item: item,
 					value: app.getJsDate(value.success.result, true, column)

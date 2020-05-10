@@ -231,9 +231,15 @@ class ProjectController extends \yii\web\Controller
         }
     }
 
-    private function saveResult($object_id, $url) {
+    private function saveResults($data) {
+        foreach ($data as $datum) {
+            $this->saveResult($datum['object_id'], $datum['link'], $datum['title']);
+        }
+    }
+
+    private function saveResult($object_id, $url, $title) {
         $db = Yii::$app->db;
-        $params = [':object_id' => $object_id, ':url' => $url];
-        $db->createCommand('execute procedure PUT_URL(:object_id, :url)', $params)->execute();
+        $params = [':object_id' => $object_id, ':url' => $url, ':title' => trim($title)];
+        $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
     }
 }
