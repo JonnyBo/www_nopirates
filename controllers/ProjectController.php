@@ -188,20 +188,15 @@ class ProjectController extends \yii\web\Controller
                                 if (false === $ret) {
                                     Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
                                 } else {
-                                    //сохраняем данные
-                                    /*
-                                    if (!empty($data)) {
-                                        foreach ($data as $res) {
-                                            $this->saveResult($res['object_id'], $res['url']);
-                                        }
-                                    }
-                                    */
                                     Yii::$app->session->setFlash('result', $result);
                                 }
                             }
                         }
-                    } catch (ErrorException $exc) {
+                    }/* catch (ErrorException $exc) {
                         Yii::$app->session->setFlash('error',$exc->getTraceAsString());
+                    }*/
+                    catch (\Exception $exc) {
+                        Yii::$app->session->setFlash('error',$exc->getMessage());
                     }
                 }
                 else {
