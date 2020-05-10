@@ -240,13 +240,9 @@ class SocialsController extends \yii\web\Controller
                 if ($form->code) {
                     $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
                     $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                    $searchs = $loader->getSearchStrings($objects);
-                    if (!empty($searchs)) {
+                    $searches = $loader->getSearchStrings($objects);
+                    if (!empty($searches)) {
                         $data = [];
-
-                        //$objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                        //print_r($objects);
-                        //exit();
                         ob_start();
                         Yii::$app->session->close();
                         $ret = eval($form->code);

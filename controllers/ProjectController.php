@@ -176,8 +176,8 @@ class ProjectController extends \yii\web\Controller
                             $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
                             $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
                             //echo Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
-                            $searchs = $loader->getSearchStrings($objects);
-                            if (!empty($searchs)) {
+                            $searches = $loader->getSearchStrings($objects);
+                            if (!empty($searches)) {
                                 $data = [];
                                 include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
                                 ob_start();
@@ -192,9 +192,7 @@ class ProjectController extends \yii\web\Controller
                                 }
                             }
                         }
-                    }/* catch (ErrorException $exc) {
-                        Yii::$app->session->setFlash('error',$exc->getTraceAsString());
-                    }*/
+                    }
                     catch (\Exception $exc) {
                         Yii::$app->session->setFlash('error',$exc->getMessage());
                     }
