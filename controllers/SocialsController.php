@@ -320,7 +320,7 @@ class SocialsController extends \yii\web\Controller
                                 $files[] = $doc;
                             }
                         }
-                        //echo $text_mail;
+                        $email = [];
                         $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
                         $params[':status_id'] = 4;
                         $sites = $db->createCommand($sql, $params)->queryAll();

@@ -10,7 +10,7 @@ namespace app\commands;
 use app\controllers\FunctionController;
 use app\models\Objects;
 use app\models\ProjectForm;
-use app\models\User;
+use app\models\ProjectAdmin;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use Yii;
