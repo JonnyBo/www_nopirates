@@ -337,7 +337,7 @@ class SiteLoader extends Component
             foreach ($objects as $object) {
                 //if ($object->original_title)
                 //    $tituls[$object->object_id][] = '"' . $object->original_title . '"';
-                //$tituls[$object->object_id][] = '"' . $object->title . '"';
+                $tituls[$object->object_id][] = '"' . $object->title . '"';
                 if ($object->year_prod)
                     $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->year_prod . '"';
                 else
