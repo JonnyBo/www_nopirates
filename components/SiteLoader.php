@@ -19,6 +19,8 @@ class SiteLoader extends Component
     public $waitRandFork;
     
     public $baseUrl = '';
+    public $codeBaseURL = '';
+    public $vkToken = '';
     
     public $startBaseUrl = '';
     
@@ -331,19 +333,18 @@ class SiteLoader extends Component
         return $out;
     }
 
-    public function getSearchStrings($objects) {
+    public function getSearchStrings($objects, $onlyYear = false) {
         $tituls = [];
         if (!empty($objects)) {
             foreach ($objects as $object) {
                 //if ($object->original_title)
                 //    $tituls[$object->object_id][] = '"' . $object->original_title . '"';
-                $tituls[$object->object_id][] = '"' . $object->title . '"';
+
+                if (!$onlyYear) {
+                    $tituls[$object->object_id][] = '"' . $object->title . '"';
+                }
                 if ($object->year_prod)
                     $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->year_prod . '"';
-                else
-                    $tituls[$object->object_id][] = '"' . $object->title . '"';
-               /* if ($object->director)
-                    $tituls[$object->object_id][] = '"' . $object->title . ' ' . $object->director . '"';*/
             }
         }
         return $tituls;

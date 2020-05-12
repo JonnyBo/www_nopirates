@@ -150,17 +150,11 @@ class ProjectController extends \yii\web\Controller
             //$form->attributes = $_POST['ProjectForm'];
             $dropCache = Yii::$app->request->post('dropCache');
             if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-                
-                
-
                 $loader = Yii::$app->siteLoader;
+                $saver = Yii::$app->saver;
                 if ($id)
                     $loader->cacheFilePrefix = $id.'_';
-                
-                //$saver = Yii::$app->afishaSaver;
-                //$saver->projectId = $id;
                 $cacheDir = Yii::$app->basePath.'/'.$loader->cacheDir;
-                //$cacheDir = $_SERVER['DOCUMENT_ROOT'];
                 $loader->options = array(
                     CURLOPT_FOLLOWLOCATION => 1,
                     CURLOPT_COOKIEJAR => $cacheDir.'/cookie'.$id.'.txt',
@@ -171,8 +165,11 @@ class ProjectController extends \yii\web\Controller
   
                     try {
                         if ($form->code) {
+                            $loader->codeBaseURL = $form->url;
+                            $saver->getProjectData($form->code, true);
                             //echo $data;
                             //exit();
+                            /*
                             $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
                             $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
                             //echo Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
@@ -191,6 +188,7 @@ class ProjectController extends \yii\web\Controller
                                     Yii::$app->session->setFlash('result', $result);
                                 }
                             }
+                            */
                         }
                     }
                     catch (\Exception $exc) {

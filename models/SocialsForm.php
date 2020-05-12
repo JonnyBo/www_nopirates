@@ -55,25 +55,5 @@ class SocialsForm extends ActiveRecord {
             'code'=>'PHP-код - обработчик содержимого страницы ($data)'
         ];
     }
-    /*
-    public static function statuses() {
-        return array(
-            'Не запущен',
-            'В очереди на запуск',
-            'Исполняется',
-            'Завершился аварийно'
-        );
-    }
-    */
-    public function findById($id) {
-        $sql = "select * from socials where id=:id";
-        $param = [':id' => $id];
-        return Yii::$app->db->createCommand($sql, $param)->queryOne();
-    }
-/*
-    public static function getStatus($idx) {
-        $statuses = self::statuses();
-        return isset($statuses[$idx]) ? $statuses[$idx] : '';
-    }
-*/
+
 }

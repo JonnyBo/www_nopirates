@@ -28,7 +28,7 @@ $config = [
             // this is the name of the session cookie used for login on the frontend
             'class' => 'yii\web\Session',
             'name' => 'advanced-frontend',
-            'timeout' => 1800,
+            'timeout' => 24*60*60*7,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

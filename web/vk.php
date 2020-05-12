@@ -69,7 +69,7 @@ $client_id = '6983714';
 $redirect_uri = 'http://nopirates/vk.php'; 
 $display = VKOAuthDisplay::POPUP;
 //$scope = array(VKOAuthUserScope::WALL, VKOAuthUserScope::VIDEO, VKOAuthUserScope::OFFLINE, VKOAuthUserScope::NOTIFY, VKOAuthUserScope::FRIENDS, VKOAuthUserScope::PHOTOS, VKOAuthUserScope::AUDIO);
-$scope = array(VKOAuthUserScope::VIDEO);
+$scope = array(VKOAuthUserScope::VIDEO, VKOAuthUserScope::OFFLINE);
 $state = '24qKeZpx3jcg70A5VCQh';
 $code = 'CODE';
 //'offline,notify,friends,photos,audio,video,wall'
@@ -93,6 +93,7 @@ if (isset($_SESSION['token'])) {
         }
         $access_token = $response['access_token'];
         $_SESSION['token'] = $access_token;
+        print_r($response);
         echo $access_token;
     }
 }
