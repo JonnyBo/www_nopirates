@@ -1,62 +1,69 @@
 <?php
 $search_string_charset = 'utf-8';
 $site_charset = 'utf-8';
-$url = 'https://exfilms.net/';
-$cookie_file_name = 'exfilms.net' . 'txt';
-$result_block = '.shortstory';
-$link_block = 'a.btl+a';
-$title_block = 'a.btl+a';
-$is_title_in_attr = false;
-$title_attr = 'title';
+$url = $loader->codeBaseURL;
+$is_get = false;
+$cookie_file_name = parse_url($url, PHP_URL_HOST) . 'txt';
 $data = [];
+
 foreach ($searches as $object_id => $search) {
     foreach ($search as $search_string) {
-        // Строка для примера поиска
-        //$search_string = 'Заклятье';
         $search_string = str_replace('"', '', $search_string);
+        // Сохраняем оригинальную строку поиска на случай, если будет преобразование кодировок
+        $original_search_string = strtolower(trim($search_string));
 
+        // Если строка поиска не в кодировке UTF-8, то преобразовываем ее
+        $search_string = ($search_string_charset == 'utf-8' ? $search_string : iconv('utf-8', $search_string_charset, $search_string));
 
-        $params = array(
-            'do' => 'search',
-            'subaction' => 'search',
-            // Если строка поиска должна быть в кодировке UTF-8
-            'story' => $search_string_charset == 'utf-8' ? $search_string : iconv('utf-8', 'windows-1251', $search_string),
-            'titleonly' => 3
-        );
+        $cur_url = $url;
 
-        $post_data = http_build_query($params);
-        // Отображение передаваемых параметров для отладки
-        //echo $post_data."\n";
-        $headers = array('Referer: ' . $url, 'Origin: ' . $url, 'application/x-www-form-urlencoded');
+        // Параметры для POST или GET запросов
+        if (!$is_get) {
+            $params = array(
+                'do' => 'search',
+                'subaction' => 'search',
+                'story' => $search_string,
+                'titleonly' => 3
+            );
+            $post_data = http_build_query($params);
+        } else {
+            $post_data = null;
+            $cur_url = $url . '?do=search&subaction=search&titleonly=3&story=' . urlencode($search_string);
+        }
 
-        // Тут надо регуляркой вырезать только чистый урл, чтобы не подставлять руками
-        $result = $loader->sendCurl($url, $headers, $cookie_file_name, $post_data);
+        // Заголовки
+        $headers = array('Referer: ' . $url, 'Origin: ' . $url, 'Content-Type: application/x-www-form-urlencoded');
 
-        // Если сам сайт необходимо переконвертить из windows-1251
-        if ($site_charset != 'utf-8')
-            $result = iconv('windows-1251', 'utf-8', $result);
+        // Получение страницы данных
+        $result = $loader->sendCurl($cur_url, $headers, $cookie_file_name, $post_data);
 
-        // Блок для отладки
-        //echo $result;
-        //return;
+        if ($result) {
+            // Если страница не в кодировке UTF-8, то преобразовываем ее
+            if ($site_charset != 'utf-8')
+                $result = iconv($site_charset, 'utf-8', $result);
 
-        phpQuery::newDocument($result);
+            phpQuery::newDocument($result);
 
+            // Проходим по всем ссылкам на странице в рамках #dle-content
+            foreach (pq('#dle-content a') as $link) {
+                // Получаем title либо из текста ссылки, либо из атрибута title
+                $title = trim((trim(pq($link)->text()) ? pq($link)->text() : pq($link)->attr('title')));
+                // Преобразовываем объектт link в ссылку
+                $link = pq($link)->attr('href');
 
-        foreach (pq($result_block) as $rrr) {
-            $link = pq($rrr)->find($link_block)->attr('href');
+                // Если ссылка не содержит имени сайта, то добавляем его
+                if ($link[0] == '/')
+                    $link = $loader->codeBaseURL . substr($link, 1);
 
-            if ($is_title_in_attr)
-                $title = pq($rrr)->find($title_block)->attr($title_attr);
-            else
-                $title = pq($rrr)->find($title_block)->text();
-
-            if ($link)
-                $data[$link] = array('title' => trim($title), 'link' => $link, 'object_id' => $object_id);
+                // Если в title содержится наша поисковая строка, то сохраняем эту ссылку
+                if (mb_stripos($title, $original_search_string) !== false) {
+                    $data[$link] = array('title' => trim($title), 'link' => $link, 'object_id' => $object_id);
+                }
+            }
         }
 
     }
 }
-$this->saveResults($data);
+//$this->saveResults($data);
 // Для отладки
-//print_r($data);
+print_r($data);
