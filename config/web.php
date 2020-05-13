@@ -21,8 +21,14 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\ProjectAdmin',
             'enableAutoLogin' => true,
+        ],
+        'session' => [
+            // this is the name of the session cookie used for login on the frontend
+            'class' => 'yii\web\Session',
+            'name' => 'advanced-frontend',
+            'timeout' => 24*60*60*7,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

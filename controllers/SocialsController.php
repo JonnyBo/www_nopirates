@@ -39,11 +39,11 @@ class SocialsController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'list'],
+                'only' => ['index', 'list', 'create', 'update', 'test'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list'],
+                        'actions' => ['index', 'list', 'create', 'update', 'test'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -153,41 +153,14 @@ class SocialsController extends \yii\web\Controller
     }
 
     public function actionTest($id = null)  {
-        require_once dirname(__DIR__).'/classes/VkPhpSdk.php';
-        require_once dirname(__DIR__).'/classes/Oauth2Proxy.php';
+        //require_once dirname(__DIR__).'/classes/VkPhpSdk.php';
+        //require_once dirname(__DIR__).'/classes/Oauth2Proxy.php';
         $form = SocialsForm::findOne(['site_id' => $id]);
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             //авторизация
             if ($form->social_type == 'vk') {
                 //сеть ВКонтакте
-/*
-                $oauth2Proxy = new \Oauth2Proxy(
-                    $form->client_id, // client id
-                    $form->client_secret, // client secret
-                    'https://oauth.vk.com/access_token', // access token url
-                    'https://oauth.vk.com/authorize', // dialog uri
-                    'code', // response type
-                    $form->redirect_uri, // redirect url
-                    $form->allow // scope
-                );
-
-                //print_r($oauth2Proxy);
-
-                if($oauth2Proxy->authorize() === true) {
-                    print_r($form);
-                    exit();
-                    // Init vk.com SDK
-                    $vkPhpSdk = new \VkPhpSdk();
-                    $vkPhpSdk->setAccessToken($oauth2Proxy->getAccessToken());
-                    $vkPhpSdk->setUserId($oauth2Proxy->getUserId());
-                    //return $vkPhpSdk;
-                    // API call - get profile
-                    //$result = $vkPhpSdk->api('video.search', $params);
-                } else {
-                    //return false;
-                    Yii::$app->session->setFlash('error','Ошибка авторизации');
-                }
-*/
+                /*
                 $session = Yii::$app->session;
                 $oauth = new VKOAuth('5.101');
                 $client_id = $form->client_id;
@@ -220,9 +193,11 @@ class SocialsController extends \yii\web\Controller
                     Yii::$app->session->setFlash('error', 'Ошибка авторизации');
                     exit();
                 }
-
+                */
+                $element = $this->vkAuthorisation($form);
             }
             if ($form->social_type == 'ok') {
+                /*
                 try {
                     $Token = new Token();
                     $Token->setAccessToken($form->access_token)->setTokenType(Token::TYPE_SESSION);
@@ -234,40 +209,54 @@ class SocialsController extends \yii\web\Controller
                     Yii::$app->session->setFlash('error',$ex->getMessage());
                     throw new HttpException(400,$ex->getMessage());
                 }
+                */
+                $element = $this->okAuthorisation($form);
             }
-            $loader = Yii::$app->siteLoader;
-            try {
-                if ($form->code) {
-                    $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
-                    $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                    $searches = $loader->getSearchStrings($objects);
-                    if (!empty($searches)) {
-                        $data = [];
-                        ob_start();
-                        Yii::$app->session->close();
-                        $ret = eval($form->code);
-                        Yii::$app->session->open();
-                        $result = ob_get_clean();
-                        //$result = json_decode($result);
-                        if (false === $ret) {
-                            Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
-                        } else {
-                            if (!empty($data)) {
-                                foreach ($data as $res) {
-                                    if ($form->social_type == 'ok') {
-                                        $this->saveResult($res->object_id, $res->permalink, $res->title);
-                                    } else {
-                                        $url = $this->clearVKLink($res['player']);
-                                        $this->saveResult($res['object_id'], $url, $res['title']);
+
+            if ($element) {
+                $loader = Yii::$app->siteLoader;
+                $saver = Yii::$app->saver;
+                try {
+                    if ($form->code) {
+                        $saver->getProjectData($form->code, true, $form->social_type, $element);
+
+                        /*
+                        $form->code = preg_replace("/^\<\?(php)?\s*\n/", '', $form->code);
+                        $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
+                        $searches = $loader->getSearchStrings($objects);
+                        if (!empty($searches)) {
+                            $data = [];
+                            ob_start();
+                            Yii::$app->session->close();
+                            $ret = eval($form->code);
+                            Yii::$app->session->open();
+                            $result = ob_get_clean();
+                            //$result = json_decode($result);
+                            if (false === $ret) {
+                                Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
+                            } else {
+                                if (!empty($data)) {
+                                    $out = [];
+                                    foreach ($data as $res) {
+                                        if ($form->social_type == 'ok') {
+                                            $out[] = [$res->object_id, $res->permalink, $res->title];
+                                            //$this->saveResult($res->object_id, $res->permalink, $res->title);
+                                        } else {
+                                            $url = $this->clearVKLink($res['player']);
+                                            $out[] = [$res['object_id'], $url, $res['title']];
+                                            //$this->saveResult($res['object_id'], $url, $res['title']);
+                                        }
                                     }
+                                    $saver->saveResults($out);
                                 }
+                                Yii::$app->session->setFlash('result', $result);
                             }
-                            Yii::$app->session->setFlash('result', $result);
                         }
+                        */
                     }
+                } catch (\Exception $exc) {
+                    Yii::$app->session->setFlash('error', $exc->getMessage());
                 }
-            } catch (ErrorException $exc) {
-                Yii::$app->session->setFlash('error',$exc->getTraceAsString());
             }
         }
 
@@ -293,11 +282,71 @@ class SocialsController extends \yii\web\Controller
 
     }
 
+    public function vkAuthorisation($form) {
+        try {
+            require_once dirname(__DIR__) . '/classes/VkPhpSdk.php';
+            require_once dirname(__DIR__) . '/classes/Oauth2Proxy.php';
+            /*
+            $session = Yii::$app->session;
+            $oauth = new VKOAuth('5.101');
+            $client_id = $form->client_id;
+            $redirect_uri = $form->redirect_uri;
+            $display = VKOAuthDisplay::POPUP;
+            $scope = array(VKOAuthUserScope::VIDEO);
+            $state = $form->client_secret;
+            $code = 'CODE';
+
+            if (isset($session['token']) && $session['token']) {
+                $vk = new \VK\Client\VKApiClient();
+                $access_token = $session['token'];
+            } else {
+                if ($_GET['code']) {
+                    $code = $_GET['code'];
+                    $response = $oauth->getAccessToken($form->client_id, $form->client_secret, $form->redirect_uri, $code);
+                    $session['token'] = $response['access_token'];
+                } else {
+                    $browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
+                    header('Location:' . $browser_url);
+                }
+            }
+            if (isset($session['token']) && $session['token']) {
+                $vk = new \VK\Client\VKApiClient();
+            } else {
+                Yii::$app->session->setFlash('error', 'Ошибка авторизации');
+                exit();
+            }
+            */
+            $vk = new VKApiClient();
+            if ($form->access_token) {
+                $loader = Yii::$app->siteLoader;
+                $loader->vkToken = $form->access_token;
+            }
+            return $vk;
+        } catch(ErrorException $ex) {
+            Yii::$app->session->setFlash('error', $ex->getMessage());
+            throw new ErrorException($ex->getMessage());
+        }
+    }
+
+    public function okAuthorisation($form) {
+        try {
+            $Token = new Token();
+            $Token->setAccessToken($form->access_token)->setTokenType(Token::TYPE_SESSION);
+
+            $Client = new Client();
+            $Client->setApplicationKey($form->application_key)->setToken($Token)->setClientId($form->client_id)->setClientSecret($form->client_secret)->setRedirectUri($form->redirect_uri);
+            return $Client;
+        } catch(\Exception $ex) {
+            Yii::$app->session->setFlash('error',$ex->getMessage());
+            throw new Exception($ex->getMessage());
+        }
+    }
+    /*
     public function actionSend() {
         set_time_limit(0);
         $db = Yii::$app->db;
         //$email = 'evgen-borisov@yandex.ru';
-        //$email = ['alexeyparallel@gmail.com', /*'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'*/];
+        //$email = ['alexeyparallel@gmail.com', 'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'];
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
             $params = [':status_id' => 4];
@@ -320,7 +369,7 @@ class SocialsController extends \yii\web\Controller
                                 $files[] = $doc;
                             }
                         }
-                        //echo $text_mail;
+                        $email = [];
                         $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
                         $params[':status_id'] = 4;
                         $sites = $db->createCommand($sql, $params)->queryAll();
@@ -362,31 +411,11 @@ class SocialsController extends \yii\web\Controller
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
-        /*
-        print_r($objects);
-        $saver = Yii::$app->saver;
-        $files = [
-            'http://oasis-light.ru/files/klassicheskiy.pdf',
-            //'http://myls.education/files/034cb5f61282145049fcae456e3c4e6b_Diploma Margarita Korolchenko B1.pdf',
-            //'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
-        ];
-        $email = 'evgen-borisov@yandex.ru; alexeyparallel@gmail.com';
-        $info = [
-            'name' => 'Евгений',
-            'message' => 'Тестовое сообщение.'
-        ];
-        //$saver->sentEmail($email, $info, $tpl = false, $files);
-        */
-    }
 
-    private function getObject($objects, $object_id) {
-        foreach($objects as $obj) {
-            if ($obj->object_id == $object_id) {
-                return $obj;
-                break;
-            }
-        }
     }
+    */
+
+
 
     private function saveResults($data) {
         foreach ($data as $datum) {
@@ -403,18 +432,5 @@ class SocialsController extends \yii\web\Controller
         }
     }
 
-    private function clearVKLink($link) {
-        //$link = str_replace("&amp;", "&", $link);
-        list($url_part, $qs_part) = array_pad(explode("?", $link), 2, "");
-        parse_str($qs_part, $qs_vars);
-        unset($qs_vars['__ref']);
-        unset($qs_vars['api_hash']);
-        if (count($qs_vars) > 0) {
-            $url = $url_part."?".http_build_query($qs_vars); // Собираем URL обратно
-            //$url = str_replace("&", "&amp;", $url);
-        } else {
-            $url = $url_part;
-        }
-        return $url;
-    }
+
 }
