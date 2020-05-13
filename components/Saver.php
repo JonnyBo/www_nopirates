@@ -117,11 +117,11 @@ class Saver extends Component {
     /**
      * @return string
      */
-    public function saveResults($data) {
+    public function saveResults($data, $project_site_id = null) {
         $db = Yii::$app->db;
         foreach ($data as $datum) {
             if ($datum['object_id'] && $datum['link']) {
-                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title']];
+                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title'], ':project_site_id' => $project_site_id];
                 //print_r($params);
                 $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
             }
