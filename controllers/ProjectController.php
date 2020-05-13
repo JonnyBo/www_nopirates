@@ -29,11 +29,11 @@ class ProjectController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'list'],
+                'only' => ['index', 'list', 'create', 'update', 'test'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list'],
+                        'actions' => ['index', 'list', 'create', 'update', 'test'],
                         'roles' => ['@'],
                     ],
                 ],

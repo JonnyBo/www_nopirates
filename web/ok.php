@@ -12,7 +12,7 @@ use alxmsl\Odnoklassniki\API\Client;
 $client_id = '1278744576';
 $application_key = 'CBAJBJDNEBABABABA';
 $client_secret = '206FB71778FCD301315E42A6';
-$redirect_url = 'http://nopirates/ok.php';
+$redirect_url = 'http://antipirates.ru/ok.php';
 
 $access_token = 'tkn14xkLCYcmHJVBuYLW8J9PDKQRdeC4gpU2UnGFncp0FEW37iDl4o4tD6jAdbMMXTsV0';
 $secret_session_key = '3d0b06e7958cdca938d0dea9875da23e';

@@ -39,11 +39,11 @@ class SocialsController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'list'],
+                'only' => ['index', 'list', 'create', 'update', 'test'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'list'],
+                        'actions' => ['index', 'list', 'create', 'update', 'test'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -341,12 +341,12 @@ class SocialsController extends \yii\web\Controller
             throw new Exception($ex->getMessage());
         }
     }
-
+    /*
     public function actionSend() {
         set_time_limit(0);
         $db = Yii::$app->db;
         //$email = 'evgen-borisov@yandex.ru';
-        //$email = ['alexeyparallel@gmail.com', /*'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'*/];
+        //$email = ['alexeyparallel@gmail.com', 'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'];
         try {
             $sql = 'select object_id from get_objects_by_status(:status_id)';
             $params = [':status_id' => 4];
@@ -411,26 +411,9 @@ class SocialsController extends \yii\web\Controller
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
-        /*
-        print_r($objects);
-        $saver = Yii::$app->saver;
-        $files = [
-            'http://oasis-light.ru/files/klassicheskiy.pdf',
-            //'http://myls.education/files/034cb5f61282145049fcae456e3c4e6b_Diploma Margarita Korolchenko B1.pdf',
-            //'http://dev.myls/files/2a9b84343a72f2bf22bacea208b52691_CKSource_Certificate_CJMDDP619.DYZ815RDE608.pdf'
-        ];
-        $email = 'evgen-borisov@yandex.ru; alexeyparallel@gmail.com';
-        $info = [
-            'name' => 'Евгений',
-            'message' => 'Тестовое сообщение.'
-        ];
-        //$saver->sentEmail($email, $info, $tpl = false, $files);
-        */
-    }
-
-    public function getData($code) {
 
     }
+    */
 
 
 

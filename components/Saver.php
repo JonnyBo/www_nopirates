@@ -82,6 +82,7 @@ class Saver extends Component {
             $ret = eval($code);
             //Yii::$app->session->open();
             $result = ob_get_clean();
+            //ob_get_clean();
             if (false === $ret) {
                 if ($test)
                     Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
@@ -160,11 +161,11 @@ class Saver extends Component {
         $result->send();
 
         if (!$result) {
-            Yii::$app->session->setFlash('error','Sending error.');
+            //Yii::$app->session->setFlash('error','Sending error.');
             return false;
             //throw new \RuntimeException('Sending error.');
         } else {
-            Yii::$app->session->setFlash('result', $result);
+            //Yii::$app->session->setFlash('result', $result);
             return true;
         }
     }
