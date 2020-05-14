@@ -46,10 +46,10 @@ class CronController extends Controller
         set_time_limit(0);
         $db = Yii::$app->db;
         $next_sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
-        $next_params = [':cnt' => 3];
+        $next_params = [':cnt' => 6];
         $project = $db->createCommand($next_sql, $next_params)->queryOne();
         $has_error = false;
-        while ($project) {
+        while ($project['site_id']) {
             $loader = Yii::$app->siteLoader;
             $saver = Yii::$app->saver;
             $loader->codeBaseURL = $project['url'];
