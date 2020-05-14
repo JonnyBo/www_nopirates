@@ -45,10 +45,10 @@ class CronController extends Controller
     {
         set_time_limit(0);
         $db = Yii::$app->db;
-        $sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
-        $params = [':cnt' => 3];
-        $project = $db->createCommand($sql, $params)->queryOne();
-        if ($project) {
+        $next_sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
+        $next_params = [':cnt' => 3];
+        $project = $db->createCommand($next_sql, $next_params)->queryOne();
+        while ($project) {
             $loader = Yii::$app->siteLoader;
             $saver = Yii::$app->saver;
             $loader->codeBaseURL = $project['url'];
@@ -80,6 +80,10 @@ class CronController extends Controller
             //после загрузки
             $sql = 'execute procedure finish_site_load(:site_id, :start_date, :end_date, :error);';
             $db->createCommand($sql, $params)->execute();
+
+            // Зацикливаем загрузку до тех пор, пока вся очередь не закончится.
+            // Необходимо, чтобы не тратилось зря время на ожидание и работало несколько процессов
+            $project = $db->createCommand($next_sql, $next_params)->queryOne();
         }
     }
 
