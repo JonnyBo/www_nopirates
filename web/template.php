@@ -2,9 +2,15 @@
 $search_string_charset = 'utf-8';
 $site_charset = 'utf-8';
 $url = $loader->codeBaseURL;
-$is_get = false;
+$is_get = true;
 $cookie_file_name = parse_url($url, PHP_URL_HOST) . 'txt';
 $data = [];
+
+$result = $loader->sendCurl($url);
+phpQuery::newDocument($result);
+
+$charset = pq('meta[http-equiv="Content-Type"]')->attr('content');
+$search_string_charset = substr($charset, strpos($charset,'=') + 1);
 
 foreach ($searches as $object_id => $search) {
     foreach ($search as $search_string) {
