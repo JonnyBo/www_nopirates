@@ -75,7 +75,7 @@ class Saver extends Component {
 
         if (!empty($searches)) {
             $data = [];
-            if (!$social)
+            if (!$social && !class_exists('phpQuery'))
                 include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
             ob_start();
             //Yii::$app->session->close();
@@ -117,11 +117,11 @@ class Saver extends Component {
     /**
      * @return string
      */
-    public function saveResults($data, $project_site_id = null) {
+    public function saveResults($data) {
         $db = Yii::$app->db;
         foreach ($data as $datum) {
             if ($datum['object_id'] && $datum['link']) {
-                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title'], ':project_site_id' => $project_site_id];
+                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title']];
                 //print_r($params);
                 $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
             }
@@ -143,11 +143,11 @@ class Saver extends Component {
             foreach ($files as $file) {
                 //$path_info = pathinfo($file);
                 $filePath = Yii::$app->basePath . '/admin/web/files/';
-                if (file_exists($filePath . $file['doc_link'])) {
-                    $content_file = file_get_contents($filePath . $file['doc_link']);
+                if (file_exists($filePath . $file['link'])) {
+                    $content_file = file_get_contents($filePath . $file['link']);
                     //$type =  $finfo->buffer($content_file);
                     $result->attachContent($content_file, [
-                        'fileName' => $file['doc_name'],
+                        'fileName' => $file['document_name'],
                         //'contentType' => $type
                     ]);
                 }
