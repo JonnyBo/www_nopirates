@@ -75,7 +75,7 @@ class Saver extends Component {
 
         if (!empty($searches)) {
             $data = [];
-            if (!$social)
+            if (!$social && !class_exists('phpQuery'))
                 include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
             ob_start();
             //Yii::$app->session->close();

@@ -349,7 +349,7 @@ class MylsObject {
 		const self = this;
 		return new Promise((resolve, reject) => {
 			let storageRequestSettings = {
-				url: "/site/" + storageKey,
+				url: "site/" + storageKey,
 				method: method,
 				dataType: dataType,
 				success: function (data) {

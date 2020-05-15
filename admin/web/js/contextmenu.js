@@ -25,7 +25,7 @@ class ContextMenu {
 						tblTitle = elem.itemData.title + ' ' + data[elem.itemData.titleField];
 					}
 					const url = app.getIdn(elem.itemData.objectType, elem.itemData.targetObject, ext_id, elem.itemData.objectView);
-					app.openTabFromUrl(url, app.addHistory(elem.itemData.extIdField, ext_id, self.mylsObject.idn, self.mylsObject.tHistory));
+					app.openTabFromUrl(url, app.addHistory(elem.itemData.extIdField, ext_id, self.mylsObject.idn, self.mylsObject.tHistory), tblTitle);
 					//updateUrl(elem.itemData.url + '-' + ext_id);
 				}
 			},

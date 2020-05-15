@@ -45,25 +45,26 @@ class CronController extends Controller
     {
         set_time_limit(0);
         $db = Yii::$app->db;
-        $sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
-        $params = [':cnt' => 3];
-        $project = $db->createCommand($sql, $params)->queryOne();
-        if ($project) {
+        $next_sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
+        $next_params = [':cnt' => 6];
+        $project = $db->createCommand($next_sql, $next_params)->queryOne();
+        $has_error = false;
+        while ($project['site_id']) {
             $loader = Yii::$app->siteLoader;
             $saver = Yii::$app->saver;
             $loader->codeBaseURL = $project['url'];
             if ($project['site_id'])
                 $loader->cacheFilePrefix = $project['site_id'] . '_';
-            $cacheDir = Yii::$app->basePath.'/'.$loader->cacheDir;
+            $cacheDir = Yii::$app->basePath . '/' . $loader->cacheDir;
             $loader->options = array(
                 CURLOPT_FOLLOWLOCATION => 1,
-                CURLOPT_COOKIEJAR => $cacheDir.'/cookie'.$project['site_id'].'.txt',
-                CURLOPT_COOKIEFILE => $cacheDir.'/cookie'.$project['site_id'].'.txt',
+                CURLOPT_COOKIEJAR => $cacheDir . '/cookie' . $project['site_id'] . '.txt',
+                CURLOPT_COOKIEFILE => $cacheDir . '/cookie' . $project['site_id'] . '.txt',
             );
 
+            $start_date = date('Y-m-d H:i:s');
             if (false !== $data = $loader->getSiteContent($project['url'], false)) {
                 //выполняем поиск по сайту
-                $start_date = date('Y-m-d H:i:s');
                 $error = null;
                 try {
                     if ($project['code']) {
@@ -71,16 +72,28 @@ class CronController extends Controller
                     }
                 } catch (\Exception $exc) {
                     $error = $exc->getMessage();
+                    $has_error = true;
                 }
-                //после загрузки
-                $sql = 'execute procedure finish_site_load(:site_id, :start_date, :end_date, :error);';
                 $params = [':site_id' => $project['site_id'], ':start_date' => $start_date, ':end_date' => date('Y-m-d H:i:s'), ':error' => $error];
-                $db->createCommand($sql, $params)->execute();
+            } else {
+                $params = [':site_id' => $project['site_id'], ':start_date' => $start_date, ':end_date' => date('Y-m-d H:i:s'), ':error' => 'Ошибка загрузки страницы'];
+                $has_error = true;
             }
+
+            //после загрузки
+            $sql = 'execute procedure finish_site_load(:site_id, :start_date, :end_date, :error);';
+            $db->createCommand($sql, $params)->execute();
+
+            $project = null;
+            // Зацикливаем загрузку до тех пор, пока вся очередь не закончится.
+            // Необходимо, чтобы не тратилось зря время на ожидание и работало несколько процессов
+            if (!$has_error)
+                $project = $db->createCommand($next_sql, $next_params)->queryOne();
         }
     }
 
-    public function actionSocial() {
+    public function actionSocial()
+    {
         set_time_limit(0);
 
         $db = Yii::$app->db;
@@ -117,12 +130,14 @@ class CronController extends Controller
 
     }
 
-    public function actionStart() {
+    public function actionStart()
+    {
         $sql = 'execute procedure start_queue';
         Yii::$app->db->createCommand($sql)->execute();
     }
 
-    public function actionSend() {
+    public function actionSend()
+    {
         set_time_limit(0);
         $db = Yii::$app->db;
         //$email = 'evgen-borisov@yandex.ru';
