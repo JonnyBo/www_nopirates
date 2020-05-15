@@ -1,0 +1,1 @@
+{"columns":[{"visibleIndex":0,"dataField":"funnel_name","dataType":"string","width":350,"visible":true,"fixed":false},{"visibleIndex":1,"dataField":"description","dataType":"string","width":350,"visible":true,"fixed":false},{"visibleIndex":2,"width":"auto","visible":true}]}

@@ -1,0 +1,1 @@
+{"columns":[{"visibleIndex":0,"dataField":"document_name","dataType":"url","width":350,"visible":true,"fixed":false},{"visibleIndex":1,"dataField":"description","dataType":"string","width":200,"visible":true,"fixed":false},{"visibleIndex":2,"width":"auto","visible":true}]}
