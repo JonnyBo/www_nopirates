@@ -44,6 +44,7 @@ class CronController extends Controller
     public function actionIndex()
     {
         set_time_limit(0);
+        $time = time();
         $db = Yii::$app->db;
         $next_sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
         $next_params = [':cnt' => 6];
@@ -81,7 +82,8 @@ class CronController extends Controller
             }
 
             //после загрузки
-            $sql = 'execute procedure finish_site_load(:site_id, :start_date, :end_date, :error);';
+            $params[':cron_id'] = $time;
+            $sql = 'execute procedure finish_site_load(:site_id, :start_date, :end_date, :error, :cron_id);';
             $db->createCommand($sql, $params)->execute();
 
             $project = null;
