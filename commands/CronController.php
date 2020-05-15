@@ -111,10 +111,10 @@ class CronController extends Controller
             $error = null;
             $start_date = date('Y-m-d H:i:s');
             if ($social->social_type == 'vk') {
-                $element = SocialsController::vkAuthorisation($social);
+                //$element = SocialsController::vkAuthorisation($social);
             }
             if ($social->social_type == 'ok') {
-                //$element = SocialsController::okAuthorisation($social);
+                $element = SocialsController::okAuthorisation($social);
             }
             //Yii::info($element, 'dev_log');
             if ($element) {
