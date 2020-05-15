@@ -105,8 +105,8 @@ class Saver extends Component {
                         }
                         //Yii::info($out, 'dev_log');
                         $data = $out;
+                        $this->saveResults($data, $site_id);
                     }
-                    $this->saveResults($data, $site_id);
                 }
                 if ($test)
                     Yii::$app->session->setFlash('result', $result);

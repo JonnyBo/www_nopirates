@@ -48,7 +48,9 @@ class CronController extends Controller
         $db = Yii::$app->db;
         $next_sql = 'select site_id, code, url from GET_NEXT_SITE(:cnt)';
         $next_params = [':cnt' => 6];
+        $transaction = $db->beginTransaction();
         $project = $db->createCommand($next_sql, $next_params)->queryOne();
+        $transaction->commit();
         $has_error = false;
         while ($project['site_id']) {
             $loader = Yii::$app->siteLoader;
@@ -89,8 +91,11 @@ class CronController extends Controller
             $project = null;
             // Зацикливаем загрузку до тех пор, пока вся очередь не закончится.
             // Необходимо, чтобы не тратилось зря время на ожидание и работало несколько процессов
-            if (!$has_error)
+            if (!$has_error) {
+                $transaction = $db->beginTransaction();
                 $project = $db->createCommand($next_sql, $next_params)->queryOne();
+                $transaction->commit();
+            }
         }
     }
 
