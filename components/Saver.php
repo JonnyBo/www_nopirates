@@ -55,7 +55,7 @@ class Saver extends Component {
         }
     }
 
-    public function getProjectData($code, $test = false, $social = false, $element = false) {
+    public function getProjectData($code, $site_id, $test = false, $social = false, $element = false) {
         set_time_limit(0);
         require_once dirname(__DIR__).'/classes/VkPhpSdk.php';
         require_once dirname(__DIR__).'/classes/Oauth2Proxy.php';
@@ -106,7 +106,7 @@ class Saver extends Component {
                         //Yii::info($out, 'dev_log');
                         $data = $out;
                     }
-                    $this->saveResults($data);
+                    $this->saveResults($data, $site_id);
                 }
                 if ($test)
                     Yii::$app->session->setFlash('result', $result);
@@ -117,13 +117,13 @@ class Saver extends Component {
     /**
      * @return string
      */
-    public function saveResults($data) {
+    public function saveResults($data, $site_id) {
         $db = Yii::$app->db;
         foreach ($data as $datum) {
             if ($datum['object_id'] && $datum['link']) {
-                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title']];
+                $params = [':object_id' => $datum['object_id'], ':url' => $datum['link'], ':title' => $datum['title'], ':site_id' => $site_id];
                 //print_r($params);
-                $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
+                $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title, :site_id)', $params)->execute();
             }
         }
     }

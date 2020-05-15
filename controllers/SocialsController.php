@@ -160,56 +160,9 @@ class SocialsController extends \yii\web\Controller
             //авторизация
             if ($form->social_type == 'vk') {
                 //сеть ВКонтакте
-                /*
-                $session = Yii::$app->session;
-                $oauth = new VKOAuth('5.101');
-                $client_id = $form->client_id;
-                $redirect_uri = $form->redirect_uri;
-                //$redirect_uri = 'http://nopirates/vk.php';
-                $display = VKOAuthDisplay::POPUP;
-                $scope = array(VKOAuthUserScope::VIDEO);
-                $state = $form->client_secret;
-                $code = 'CODE';
-
-                if (isset($session['token']) && $session['token']) {
-                    $vk = new \VK\Client\VKApiClient();
-                    $access_token = $session['token'];
-                } else {
-                    if ($_GET['code']) {
-                        $code = $_GET['code'];
-                        $response = $oauth->getAccessToken($form->client_id, $form->client_secret, $form->redirect_uri, $code);
-                        $session['token'] = $response['access_token'];
-                    } else {
-                        $browser_url = $oauth->getAuthorizeUrl(VKOAuthResponseType::CODE, $client_id, $redirect_uri, $display, $scope, $state);
-                        header('Location:' . $browser_url);
-                    }
-                }
-                //$access_token = $form->access_token;
-                //echo $access_token;
-                //$access_token = 'b650621ee7202556f5b354e1268487fdde6ecaca00b896d67fbbc0f059a9d9c8eb730ae11137af493668f';
-                if (isset($session['token']) && $session['token']) {
-                    $vk = new \VK\Client\VKApiClient();
-                } else {
-                    Yii::$app->session->setFlash('error', 'Ошибка авторизации');
-                    exit();
-                }
-                */
                 $element = $this->vkAuthorisation($form);
             }
             if ($form->social_type == 'ok') {
-                /*
-                try {
-                    $Token = new Token();
-                    $Token->setAccessToken($form->access_token)->setTokenType(Token::TYPE_SESSION);
-
-                    $Client = new Client();
-                    $Client->setApplicationKey($form->application_key)->setToken($Token)->setClientId($form->client_id)->setClientSecret($form->client_secret)->setRedirectUri($form->redirect_uri);
-                } catch(ErrorException $ex) {
-                    //Yii::$app->db->rollback();
-                    Yii::$app->session->setFlash('error',$ex->getMessage());
-                    throw new HttpException(400,$ex->getMessage());
-                }
-                */
                 $element = $this->okAuthorisation($form);
             }
 
@@ -218,41 +171,7 @@ class SocialsController extends \yii\web\Controller
                 $saver = Yii::$app->saver;
                 try {
                     if ($form->code) {
-                        $saver->getProjectData($form->code, true, $form->social_type, $element);
-
-                        /*
-                        $form->code = preg_replace("/^\<\?(php)?\s*\n/", '', $form->code);
-                        $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                        $searches = $loader->getSearchStrings($objects);
-                        if (!empty($searches)) {
-                            $data = [];
-                            ob_start();
-                            Yii::$app->session->close();
-                            $ret = eval($form->code);
-                            Yii::$app->session->open();
-                            $result = ob_get_clean();
-                            //$result = json_decode($result);
-                            if (false === $ret) {
-                                Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
-                            } else {
-                                if (!empty($data)) {
-                                    $out = [];
-                                    foreach ($data as $res) {
-                                        if ($form->social_type == 'ok') {
-                                            $out[] = [$res->object_id, $res->permalink, $res->title];
-                                            //$this->saveResult($res->object_id, $res->permalink, $res->title);
-                                        } else {
-                                            $url = $this->clearVKLink($res['player']);
-                                            $out[] = [$res['object_id'], $url, $res['title']];
-                                            //$this->saveResult($res['object_id'], $url, $res['title']);
-                                        }
-                                    }
-                                    $saver->saveResults($out);
-                                }
-                                Yii::$app->session->setFlash('result', $result);
-                            }
-                        }
-                        */
+                        $saver->getProjectData($form->code, $form->site_id, true, $form->social_type, $element);
                     }
                 } catch (\Exception $exc) {
                     Yii::$app->session->setFlash('error', $exc->getMessage());
@@ -341,82 +260,7 @@ class SocialsController extends \yii\web\Controller
             throw new Exception($ex->getMessage());
         }
     }
-    /*
-    public function actionSend() {
-        set_time_limit(0);
-        $db = Yii::$app->db;
-        //$email = 'evgen-borisov@yandex.ru';
-        //$email = ['alexeyparallel@gmail.com', 'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'];
-        try {
-            $sql = 'select object_id from get_objects_by_status(:status_id)';
-            $params = [':status_id' => 4];
-            $objects = $db->createCommand($sql, $params)->queryAll();
-            if (!empty($objects)) {
-                $saver = Yii::$app->saver;
-                foreach ($objects as $obj) {
-                    $sql = 'select mail_text, title, original_title from get_object_first_mail_text(:object_id)';
-                    $params = [':object_id' => $obj['object_id']];
-                    $text_mail = '';
-                    if ($mail = $db->createCommand($sql, $params)->queryOne()) {
-                        //print_r($mail);
-                        $text_mail = str_replace('{title}', $mail['title'], $mail['mail_text']);
-                        $text_mail = str_replace('{original_title}', $mail['original_title'], $text_mail);
-                        $sql = 'select doc_name, doc_link from get_documents_by_object(:object_id)';
-                        $documents = $db->createCommand($sql, $params)->queryAll();
-                        $files = [];
-                        if (!empty($documents)) {
-                            foreach ($documents as $doc) {
-                                $files[] = $doc;
-                            }
-                        }
-                        $email = [];
-                        $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
-                        $params[':status_id'] = 4;
-                        $sites = $db->createCommand($sql, $params)->queryAll();
-                        if (!empty($sites)) {
-                            foreach ($sites as $site) {
-                                if ($site['email']) {
-                                    $arrMail = explode(',', $site['email']);
-                                    if ($arrMail) {
-                                        foreach ($arrMail as $fmail) {
-                                            $email[] = trim($fmail);
-                                        }
-                                        //$email = [$site['email']];
-                                        $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
-                                        $params[':site_id'] = $site['site_id'];
-                                        $links = $db->createCommand($sql, $params)->queryAll();
-                                        $text_links = '';
-                                        if (!empty($links)) {
-                                            foreach ($links as $link) {
-                                                $text_links .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
-                                            }
-                                        }
-                                        $info = ['message' => $text_mail, 'links' => $text_links];
-                                        if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
-                                            sleep(5);
-                                            printf('<p>отправлено письмо: объект - %s, сайт - %s, документов - %s</p>', $mail['title'], $site['site_id'], count($files));
-                                            $sql = 'execute procedure set_objects_first_email(:object_id, :site_id, :status_id)';
-                                            $db->createCommand($sql, $params)->execute();
-                                        } else {
-                                            printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-
-    }
-    */
-
-
-
+/*
     private function saveResults($data) {
         foreach ($data as $datum) {
             $this->saveResult($datum['object_id'], $datum['link'], $datum['title']);
@@ -431,6 +275,6 @@ class SocialsController extends \yii\web\Controller
             $db->createCommand('execute procedure PUT_URL(:object_id, :url, :title)', $params)->execute();
         }
     }
-
+*/
 
 }

@@ -69,7 +69,7 @@ class CronController extends Controller
                 $error = null;
                 try {
                     if ($project['code']) {
-                        $saver->getProjectData($project['code'], false);
+                        $saver->getProjectData($project['code'], $project['site_id'], false);
                     }
                 } catch (\Exception $exc) {
                     $error = $exc->getMessage();
@@ -117,7 +117,7 @@ class CronController extends Controller
                 $saver = Yii::$app->saver;
                 try {
                     if ($social->code) {
-                        $saver->getProjectData($social->code, false, $social->social_type, $element);
+                        $saver->getProjectData($social->code, $social->site_id, false, $social->social_type, $element);
                     }
                 } catch (\Exception $exc) {
                     $error = $exc->getMessage();

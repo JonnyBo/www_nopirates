@@ -166,7 +166,7 @@ class ProjectController extends \yii\web\Controller
                     try {
                         if ($form->code) {
                             $loader->codeBaseURL = $form->url;
-                            $saver->getProjectData($form->code, true);
+                            $saver->getProjectData($form->code, $form->site_id, true);
                             //echo $data;
                             //exit();
                             /*
