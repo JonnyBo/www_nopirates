@@ -6,7 +6,4 @@ use yii\helpers\Html;
 ?>
 
 <?= $message ?>
-<br>
-<br>
-<?= $links ?>
 

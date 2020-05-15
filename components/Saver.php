@@ -143,11 +143,11 @@ class Saver extends Component {
             foreach ($files as $file) {
                 //$path_info = pathinfo($file);
                 $filePath = Yii::$app->basePath . '/admin/web/files/';
-                if (file_exists($filePath . $file['doc_link'])) {
-                    $content_file = file_get_contents($filePath . $file['doc_link']);
+                if (file_exists($filePath . $file['link'])) {
+                    $content_file = file_get_contents($filePath . $file['link']);
                     //$type =  $finfo->buffer($content_file);
                     $result->attachContent($content_file, [
-                        'fileName' => $file['doc_name'],
+                        'fileName' => $file['document_name'],
                         //'contentType' => $type
                     ]);
                 }

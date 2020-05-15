@@ -128,68 +128,56 @@ class CronController extends Controller
         //$email = 'evgen-borisov@yandex.ru';
         //$email = ['alexeyparallel@gmail.com', /*'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'*/];
         try {
-            $sql = 'select object_id from get_objects_by_status(:status_id)';
+            $sql = 'select site_id, email from get_sites_email(:status_id)';
             $params = [':status_id' => 4];
-            $objects = $db->createCommand($sql, $params)->queryAll();
-            if (!empty($objects)) {
+            $sites = $db->createCommand($sql, $params)->queryAll();
+            if (!empty($sites)) {
                 $saver = Yii::$app->saver;
-                foreach ($objects as $obj) {
-                    $sql = 'select mail_text, title, original_title from get_object_first_mail_text(:object_id)';
-                    $params = [':object_id' => $obj['object_id']];
+                foreach ($sites as $site) {
                     $text_mail = '';
-                    if ($mail = $db->createCommand($sql, $params)->queryOne()) {
-                        //print_r($mail);
-                        $text_mail = str_replace('{title}', $mail['title'], $mail['mail_text']);
-                        $text_mail = str_replace('{original_title}', $mail['original_title'], $text_mail);
-                        $sql = 'select doc_name, doc_link from get_documents_by_object(:object_id)';
-                        $documents = $db->createCommand($sql, $params)->queryAll();
-                        $files = [];
-                        if (!empty($documents)) {
-                            foreach ($documents as $doc) {
-                                $files[] = $doc;
-                            }
+                    $sql = 'select object_id, mail_text, title, original_title, links from get_objects_by_status(:status_id, :site_id)';
+                    $params[':site_id'] = $site['site_id'];
+                    $objects = $db->createCommand($sql, $params)->queryAll();
+                    if (!empty($objects)) {
+                        $titles = '';
+                        foreach ($objects as $obj) {
+                            $titles .= '«<strong>' . $obj['title'] . '</strong>»' . ' (<i>оригинальное название «' . $obj['original_title'] . '»</i>)<br/>' . $obj['links'] . '<br/><br/>';
                         }
+                        $text_mail = str_replace('{title}', $titles, $obj['mail_text']);
                         $email = [];
-                        $sql = 'select site_id, email from get_sites_email(:object_id, :status_id)';
-                        $params[':status_id'] = 4;
-                        $sites = $db->createCommand($sql, $params)->queryAll();
-                        if (!empty($sites)) {
-                            foreach ($sites as $site) {
-                                $email = [];
-                                if ($site['email']) {
-                                    $arrMail = explode(',', $site['email']);
-                                    if ($arrMail) {
-                                        foreach ($arrMail as $fmail) {
-                                            $email[] = trim($fmail);
-                                        }
-                                        //$email = [$site['email']];
-                                        $sql = 'select url from get_links_by_object_and_status(:object_id, :status_id, :site_id)';
-                                        $params[':site_id'] = $site['site_id'];
-                                        $links = $db->createCommand($sql, $params)->queryAll();
-                                        $text_links = '';
-                                        if (!empty($links)) {
-                                            foreach ($links as $link) {
-                                                $text_links .= '<br /><a href="' . $link['url'] . '">' . $link['url'] . '</a> ';
-                                            }
-                                        }
-                                        $info = ['message' => $text_mail, 'links' => $text_links];
-                                        if (count($files) > 0) {
-                                            if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
-                                                sleep(1);
-                                                printf("отправлено письмо: %s, объект - %s, сайт - %s, документов - %s, ссылок - %s \t\n", implode(', ', $email), $mail['title'], $site['site_id'], count($files), count($links));
-                                                $sql = 'execute procedure set_objects_first_email(:object_id, :site_id, :status_id)';
-                                                $db->createCommand($sql, $params)->execute();
-                                            } else {
-                                                //printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
-                                            }
-
-                                        }
-                                    }
+                        if ($site['email']) {
+                            $arrMail = explode(',', $site['email']);
+                            if ($arrMail) {
+                                foreach ($arrMail as $fmail) {
+                                    $email[] = trim($fmail);
                                 }
+                            }
+                            $sql = 'select distinct document_name, link from get_documents_by_site(:status_id, :site_id)';
+                            $documents = $db->createCommand($sql, $params)->queryAll();
+                            $files = [];
+                            if (!empty($documents)) {
+                                foreach ($documents as $doc) {
+                                    $files[] = $doc;
+                                }
+                            }
+                            $info = ['message' => $text_mail];
+                            if (count($files) > 0) {
+                                //printf("отправлено письмо: %s, сайт - %s, документов - %s \t\n", implode(', ', $email), $site['site_id'], count($files));
+
+                                if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
+                                    sleep(1);
+                                    //printf("отправлено письмо: %s, объект - %s, сайт - %s, документов - %s \t\n", implode(', ', $email), $obj['title'], $site['site_id'], count($files));
+                                    $sql = 'execute procedure set_objects_first_email(:site_id, :status_id)';
+                                    $db->createCommand($sql, $params)->execute();
+                                } else {
+                                    //printf('<p>ОШИБКА! не отправлено письмо: объект - %s, сайт - %s</p>', $obj['object_id'], $site['site_id']);
+                                }
+
                             }
                         }
 
                     }
+
                 }
             }
         } catch (\Exception $e) {
