@@ -207,4 +207,22 @@ class CronController extends Controller
         }
     }
 
+    public function actionHour() {
+        $db = Yii::$app->db;
+        $sql = 'execute procedure every_hour_job';
+        $db->createCommand($sql, [])->execute();
+    }
+
+    public function actionTechnical() {
+        $db = Yii::$app->db;
+        $sql = 'select site_id, code from get_technical_sites';
+        $sites = $db->createCommand($sql, [])->queryAll();
+        if (!empty($sites)) {
+            $saver = Yii::$app->saver;
+            foreach ($sites as $site) {
+                $saver->getProjectData($site['code'], $site['site_id'], false);
+            }
+        }
+    }
+
 }
