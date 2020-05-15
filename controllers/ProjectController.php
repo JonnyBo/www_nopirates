@@ -167,28 +167,7 @@ class ProjectController extends \yii\web\Controller
                         if ($form->code) {
                             $loader->codeBaseURL = $form->url;
                             $saver->getProjectData($form->code, $form->site_id, true);
-                            //echo $data;
-                            //exit();
-                            /*
-                            $form->code = preg_replace("/^\<\?(php)?\s*\n/",'',$form->code);
-                            $objects = Objects::find()->where('current_date between coalesce(start_date, current_date) and coalesce(end_date, current_date)')->all();
-                            //echo Yii::$app->basePath.'/extensions/phpQuery/phpQuery.php';
-                            $searches = $loader->getSearchStrings($objects);
-                            if (!empty($searches)) {
-                                $data = [];
-                                include Yii::$app->basePath . '/extensions/phpQuery/phpQuery.php';
-                                ob_start();
-                                Yii::$app->session->close();
-                                $ret = eval($form->code);
-                                Yii::$app->session->open();
-                                $result = ob_get_clean();
-                                if (false === $ret) {
-                                    Yii::$app->session->setFlash('error', 'Ошибка синтаксиса');
-                                } else {
-                                    Yii::$app->session->setFlash('result', $result);
-                                }
-                            }
-                            */
+
                         }
                     }
                     catch (\Exception $exc) {
