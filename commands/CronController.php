@@ -162,8 +162,20 @@ class CronController extends Controller
                     $objects = $db->createCommand($sql, $params)->queryAll();
                     if (!empty($objects)) {
                         $titles = '';
+                        $isDoc = false;
                         foreach ($objects as $obj) {
-                            $titles .= '«<strong>' . $obj['title'] . '</strong>»' . ' (<i>оригинальное название «' . $obj['original_title'] . '»</i>)<br/>' . $obj['links'] . '<br/><br/>';
+                            $titles .= '«<strong>' . $obj['title'] . '</strong>»' . ' (<i>оригинальное название «' . $obj['original_title'] . '»</i>)<br/>' . $obj['links'] . '<br/>';
+                            $params[':object_id'] = $obj['object_id'];
+                            $sql = 'select distinct document_name, link from get_documents_by_object(:object_id)';
+                            $documents = $db->createCommand($sql, $params)->queryAll();
+                            $docs = '<i>Цепочка договоров:</i><br/>';
+                            if (!empty($documents)) {
+                                $isDoc = true;
+                                foreach ($documents as $doc) {
+                                    $docs .= '<a href="'.$doc['link'].'">'.$doc['document_name'].'</a><br/>';
+                                }
+                                $titles .= $docs . '<br/><br/>';
+                            }
                         }
                         $text_mail = str_replace('{title}', $titles, $obj['mail_text']);
                         $email = [];
@@ -174,20 +186,12 @@ class CronController extends Controller
                                     $email[] = trim($fmail);
                                 }
                             }
-                            $sql = 'select distinct document_name, link from get_documents_by_site(:status_id, :site_id)';
-                            $documents = $db->createCommand($sql, $params)->queryAll();
-                            $files = [];
-                            if (!empty($documents)) {
-                                foreach ($documents as $doc) {
-                                    $files[] = $doc;
-                                }
-                            }
                             $info = ['message' => $text_mail];
-                            if (count($files) > 0) {
+                            if ($isDoc) {
                                 //printf("отправлено письмо: %s, сайт - %s, документов - %s \t\n", implode(', ', $email), $site['site_id'], count($files));
 
-                                if ($saver->sentEmail($email, $info, $tpl = false, $files)) {
-                                    sleep(1);
+                                if ($saver->sentEmail($email, $info, $tpl = false)) {
+                                    //sleep(1);
                                     //printf("отправлено письмо: %s, объект - %s, сайт - %s, документов - %s \t\n", implode(', ', $email), $obj['title'], $site['site_id'], count($files));
                                     $sql = 'execute procedure set_objects_first_email(:site_id, :status_id)';
                                     $db->createCommand($sql, $params)->execute();
