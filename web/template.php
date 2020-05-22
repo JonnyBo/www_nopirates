@@ -1,14 +1,19 @@
 <?php
 $search_string_charset = 'utf-8';
 $site_charset = 'utf-8';
+
+// Если нет последнего слэша, то добавляем его
+if ($loader->codeBaseURL[strlen($loader->codeBaseURL) - 1] !== '/')
+    $loader->codeBaseURL .= '/';
 $url = $loader->codeBaseURL;
+
 $is_get = true;
 $cookie_file_name = parse_url($url, PHP_URL_HOST) . 'txt';
 $data = [];
 
 $result = $loader->sendCurl($url);
 phpQuery::newDocument($result);
-
+// Получаем charset страницы
 $charset = pq('meta[http-equiv="Content-Type"]')->attr('content');
 $search_string_charset = substr($charset, strpos($charset,'=') + 1);
 
@@ -28,13 +33,13 @@ foreach ($searches as $object_id => $search) {
             $params = array(
                 'do' => 'search',
                 'subaction' => 'search',
-                'story' => $search_string,
+                'q' => $search_string,
                 'titleonly' => 3
             );
             $post_data = http_build_query($params);
         } else {
             $post_data = null;
-            $cur_url = $url . '?do=search&subaction=search&titleonly=3&story=' . urlencode($search_string);
+            $cur_url = $url . 'search/?q=' . urlencode($search_string);
         }
 
         // Заголовки
@@ -50,26 +55,33 @@ foreach ($searches as $object_id => $search) {
 
             phpQuery::newDocument($result);
 
-            // Проходим по всем ссылкам на странице в рамках #dle-content
-            foreach (pq('#dle-content a') as $link) {
+            // Проходим по всем ссылкам на странице
+            foreach (pq('a') as $link) {
                 // Получаем title либо из текста ссылки, либо из атрибута title
                 $title = trim((trim(pq($link)->text()) ? pq($link)->text() : pq($link)->attr('title')));
-                // Преобразовываем объектт link в ссылку
+                // Преобразовываем объект link в ссылку
                 $link = pq($link)->attr('href');
 
-                // Если ссылка не содержит имени сайта, то добавляем его
-                if ($link[0] == '/')
-                    $link = $loader->codeBaseURL . substr($link, 1);
+                // Проверяем, не является ли эта ссылкой на изображение
+                if (strlen($link) > 4 && substr_compare( $link, '.jpg', -4) !== 0) {
 
-                // Если в title содержится наша поисковая строка, то сохраняем эту ссылку
-                if (mb_stripos($title, $original_search_string) !== false) {
-                    $data[$link] = array('title' => trim($title), 'link' => $link, 'object_id' => $object_id);
+                    // Если ссылка не содержит имени сайта, то добавляем его
+                    if ($link[0] == '/' && $link[1] == '/')
+                        $link = parse_url($loader->codeBaseURL, PHP_URL_SCHEME) . ':' . $link;
+
+                    if ($link[0] == '/')
+                        $link = $loader->codeBaseURL . substr($link, 1);
+
+                    // Если в title содержится наша поисковая строка, то сохраняем эту ссылку
+                    if (mb_stripos($title, $original_search_string) !== false) {
+                        $data[$link] = array('title' => trim($title), 'link' => $link, 'object_id' => $object_id);
+                    }
                 }
             }
         }
 
     }
 }
-//$this->saveResults($data);
+$this->saveResults($data, $site_id);
 // Для отладки
-print_r($data);
+//print_r($data);
