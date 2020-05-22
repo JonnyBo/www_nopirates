@@ -150,15 +150,15 @@ class CronController extends Controller
         //$email = 'evgen-borisov@yandex.ru';
         //$email = ['alexeyparallel@gmail.com', /*'evgen-borisov@yandex.ru', 'evgeny.e.borisov@gmail.com', 'legal@antipirates.ru'*/];
         try {
-            $sql = 'select site_id, email from get_sites_email(:status_id)';
+            $sql = 'select email from get_sites_email(:status_id)';
             $params = [':status_id' => 4];
             $sites = $db->createCommand($sql, $params)->queryAll();
             if (!empty($sites)) {
                 $saver = Yii::$app->saver;
                 foreach ($sites as $site) {
                     $text_mail = '';
-                    $sql = 'select object_id, mail_text, title, original_title, links from get_objects_by_status(:status_id, :site_id)';
-                    $params[':site_id'] = $site['site_id'];
+                    $sql = 'select object_id, mail_text, title, original_title, links from get_objects_by_status(:status_id, :email)';
+                    $params[':email'] = $site['email'];
                     $objects = $db->createCommand($sql, $params)->queryAll();
                     if (!empty($objects)) {
                         $titles = '';
